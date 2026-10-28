@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101a2b">
+<title>LUFAN — Your Ludo World</title>
+<style>
+:root{--navy:#090d18;--teal:#8b7cff;--white:#f4f3ff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--navy);color:var(--white)}body{min-height:100svh;overflow-x:hidden;overflow-y:auto}.splash{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;isolation:isolate;padding:30px 22px;background:radial-gradient(ellipse at 50% 42%,#211a3b 0%,#111323 39%,#090d18 76%)}.glow{position:absolute;z-index:-1;border-radius:50%;filter:blur(1px);pointer-events:none}.glow.one{width:290px;height:290px;background:#8b7cff18;top:calc(50% - 210px);left:calc(50% - 145px)}.glow.two{width:450px;height:450px;border:1px solid #8ba7c012;top:calc(50% - 225px);left:calc(50% - 225px)}.orbit{position:absolute;width:min(82vw,360px);aspect-ratio:1;border:1px solid #c4bbff0d;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-57%)}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #c4bbff0c;border-radius:50%;inset:28px}.orbit:after{inset:58px}.brand-wrap{display:flex;flex-direction:column;align-items:center;transform:translateY(-15px);animation:arrive .85s cubic-bezier(.2,.8,.2,1) both}.dice-scene{width:160px;height:150px;position:relative;display:grid;place-items:center;margin-bottom:23px}.dice-shadow{position:absolute;width:112px;height:26px;border-radius:50%;background:#02081188;filter:blur(14px);bottom:6px;left:24px}.dice{width:112px;height:112px;position:relative;transform:rotate(-8deg);border-radius:27px;background:linear-gradient(145deg,#c5b8ff 0%,#8870f4 43%,#5a3fc4 100%);box-shadow:inset 0 3px 3px #ffffff80,inset 0 -7px 9px #342075a6,0 15px 28px #06111d88;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:19px;gap:8px;animation:float 2.8s ease-in-out infinite}.pip{width:13px;height:13px;border-radius:50%;background:#f6ffff;box-shadow:inset 0 -2px 2px #9cbfc3;align-self:center;justify-self:center}.pip:nth-child(1){grid-area:1/1}.pip:nth-child(2){grid-area:1/3}.pip:nth-child(3){grid-area:2/2}.pip:nth-child(4){grid-area:3/1}.pip:nth-child(5){grid-area:3/3}.mini-die{position:absolute;width:36px;height:36px;border-radius:10px;background:linear-gradient(145deg,#ff8db8,#e84d91);box-shadow:0 7px 13px #030b1770;display:grid;place-items:center;color:#fff;font-size:17px;font-weight:900}.mini-die.a{right:1px;top:15px;transform:rotate(14deg)}.mini-die.b{left:0;bottom:20px;transform:rotate(-15deg);background:linear-gradient(145deg,#a7b7ff,#6a78ec)}.brand{font-size:clamp(43px,12vw,60px);font-weight:950;letter-spacing:8px;line-height:1;margin-left:8px;text-shadow:0 5px 22px #0005}.tagline{margin-top:14px;font-size:11px;letter-spacing:3.3px;color:#c4c1d9;font-weight:650}.accent{width:36px;height:3px;background:var(--teal);border-radius:5px;margin-top:21px;box-shadow:0 0 16px #9b8bff66}.loader{position:absolute;bottom:calc(11vh + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(220px,62vw);text-align:center}.load-text{font-size:9px;letter-spacing:2.1px;color:#a6a3c2;font-weight:700;margin-bottom:12px}.track{height:3px;width:100%;border-radius:9px;background:#ffffff14;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#7359e8,#c0a9ff);border-radius:9px;box-shadow:0 0 10px #9b8bff66;animation:load 3s ease-in-out forwards}.dots{display:flex;gap:5px;justify-content:center;margin-top:12px}.dots i{width:4px;height:4px;border-radius:50%;background:#716b9b;animation:dot 1.2s infinite ease-in-out}.dots i:nth-child(2){animation-delay:.16s}.dots i:nth-child(3){animation-delay:.32s}.corner{position:absolute;bottom:24px;font-size:9px;letter-spacing:1.5px;color:#666783}.corner.left{left:22px}.corner.right{right:22px}@keyframes load{0%{width:0}75%{width:82%}100%{width:100%}}@keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-7px) rotate(-5deg)}}@keyframes arrive{from{opacity:0;transform:translateY(7px) scale(.96)}to{opacity:1;transform:translateY(-15px) scale(1)}}@keyframes dot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1.15)}}
+.home{display:none;position:relative;isolation:isolate;overflow:hidden;min-height:100svh;background:radial-gradient(ellipse at top,#241a40 0%,#111323 38%,#090d18 82%);padding:24px 20px 34px;animation:homeIn .55s ease both}
+.home.visible{display:block}.home-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px auto 28px;max-width:560px}.home-brand{display:flex;align-items:center;gap:10px}.home-mark{width:43px;height:43px;flex:0 0 43px;padding:0;border:0;border-radius:14px;background:linear-gradient(145deg,#c5b8ff,#6b50d5);display:grid;place-items:center;color:#fff;font:inherit;font-size:21px;font-weight:1000;box-shadow:inset 0 2px 2px #fff8,0 7px 17px #05071180;cursor:pointer;-webkit-tap-highlight-color:transparent}.home-mark:focus-visible{outline:2px solid #a998ff;outline-offset:4px}.home-name{font-weight:950;font-size:21px;letter-spacing:3px}.home-tag{font-size:9px;letter-spacing:1.7px;color:#a7a2c6;margin-top:3px}.avatar{width:42px;height:42px;border:1px solid #3a3559;border-radius:14px;background:#17182b;color:#c9c1ff;font-size:20px}.welcome{max-width:560px;margin:0 auto 25px}.kicker{color:#b8aaff;font-size:10px;letter-spacing:2.3px;font-weight:900}.welcome h1{font-size:clamp(29px,7vw,39px);line-height:1.12;letter-spacing:-1px;margin:10px 0 9px}.welcome h1 span{color:#b6a8ff}.welcome p{font-size:13px;line-height:1.6;color:#a9abc1;margin:0}.section-title{max-width:560px;margin:0 auto 13px;display:flex;align-items:center;justify-content:space-between}.section-title h2{font-size:16px;margin:0}.section-title span{font-size:10px;color:#aaa6c5;letter-spacing:1px}.play-cards{max-width:560px;margin:0 auto;display:grid;gap:13px}.play-card{position:relative;overflow:hidden;text-align:left;width:100%;border:1px solid #37324e;border-radius:21px;padding:18px 17px;background:linear-gradient(120deg,#1c1b31,#171a2b 68%,#1d1931);color:#f8f7ff;display:flex;align-items:center;gap:15px;min-height:112px;box-shadow:0 9px 24px #0002;transition:transform .16s,border-color .16s}.play-card:active{transform:scale(.99)}
+.play-card:after{content:"";position:absolute;width:120px;height:120px;border:22px solid var(--shade-ring);border-radius:50%;right:-34px;top:-38px;pointer-events:none}
+.play-card .play-icon{background:var(--shade-icon);border-color:var(--shade-border)}
+.play-card .arrow{color:var(--shade-accent)}
+.play-card.featured{background:linear-gradient(112deg,#6744ca,#873bb4 62%,#ad357e);border-color:#a27bf1;box-shadow:0 10px 28px #5d31a52c}
+.play-card:nth-child(1){--shade-ring:#e4caff12;--shade-icon:#ffffff22;--shade-border:#ffffff30;--shade-accent:#ffffff;background:linear-gradient(115deg,#6744ca,#873bb4 62%,#ad357e);border-color:#a27bf1}
+.play-card:nth-child(2){--shade-ring:#9b83ff15;--shade-icon:#9274ff1b;--shade-border:#9f8bff35;--shade-accent:#c6b9ff;background:linear-gradient(115deg,#211b3d,#19182d 65%,#26203f);border-color:#49406d}
+.play-card:nth-child(3){--shade-ring:#66d9ff13;--shade-icon:#53cfff18;--shade-border:#63d7ff35;--shade-accent:#7cddff;background:linear-gradient(115deg,#142b3b,#172231 65%,#1b2c40);border-color:#2d536b}
+.play-card:nth-child(4){--shade-ring:#ffb86b13;--shade-icon:#ffb86b18;--shade-border:#ffbd7a35;--shade-accent:#ffc58c;background:linear-gradient(115deg,#30251f,#211d23 65%,#32231f);border-color:#604532}.play-icon{width:61px;height:61px;flex-shrink:0;border-radius:18px;display:grid;place-items:center;font-size:29px;background:#b8aaff1c;border:1px solid #c6baff25}.featured .play-icon{background:#ffffff22;border-color:#ffffff30}.card-copy{flex:1;min-width:0}.card-copy strong{display:block;font-size:16px;margin-bottom:5px}.card-copy small{display:block;color:#aaa9c2;font-size:11px;line-height:1.45}.featured .card-copy small{color:#f0dff5}.arrow{font-size:24px;color:#c5baff;position:relative;z-index:1}.featured .arrow{color:#fff}.home-foot{max-width:560px;margin:23px auto 0;text-align:center;color:#666987;font-size:10px;letter-spacing:1px}.toast-home{margin:15px auto 0;max-width:560px;display:none;padding:12px;border:1px solid #484064;background:#201d35;color:#d8d2ff;border-radius:12px;font-size:12px;line-height:1.5}.toast-home.show{display:block}@keyframes homeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Home-only magical pen trail: a fine blue light ribbon with tiny fading sparks. */
+#magicTrail{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;display:none}
+.home.visible~#magicTrail{display:block}
+.play-card{isolation:isolate}
+.play-card .scroll-shine{display:none}
+.play-card.scroll-shine::before{content:"";position:absolute;z-index:2;inset:-20% auto -20% -65%;width:42%;pointer-events:none;background:linear-gradient(105deg,transparent 0%,#74d6ff08 25%,#8cddff5c 50%,#ffffff12 62%,transparent 100%);transform:skewX(-18deg);animation:cardShine .9s ease-out forwards}
+@keyframes cardShine{from{left:-65%;opacity:0}15%{opacity:1}to{left:130%;opacity:0}}
+@media (prefers-reduced-motion:reduce){#magicTrail{display:none!important}.play-card.scroll-shine::before{animation:none!important;opacity:0!important}}
+@media(min-width:700px){.dice-scene{transform:scale(1.08);margin-bottom:32px}.brand{font-size:66px}.loader{bottom:9vh}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}.fill{width:100%}}
+
+/* Professional time-of-day moods: subtle ambient shifts, with each game card keeping its own identity. */
+body{--mood-glow:#241a40;--mood-accent:#b8aaff;--mood-text:#aaa9c2}
+body[data-time="morning"]{--mood-glow:#202a49;--mood-accent:#a9c9ff;--mood-text:#b7c4df}
+body[data-time="day"]{--mood-glow:#202b43;--mood-accent:#aebdff;--mood-text:#b8c1d7}
+body[data-time="evening"]{--mood-glow:#342044;--mood-accent:#d0a8ff;--mood-text:#c2b0d8}
+body[data-time="night"]{--mood-glow:#17172f;--mood-accent:#a99aff;--mood-text:#9e9bbd}
+.home{background:radial-gradient(ellipse at 50% -8%,var(--mood-glow) 0%,#111323 43%,#090d18 84%);transition:background 1.2s ease}
+.kicker{color:var(--mood-accent);transition:color 1.2s ease}
+.welcome p{color:var(--mood-text);transition:color 1.2s ease}
+body[data-time="morning"] .play-card{filter:saturate(1.05) brightness(1.045)}
+body[data-time="day"] .play-card{filter:saturate(1.02) brightness(1.025)}
+body[data-time="evening"] .play-card{filter:saturate(1.07) brightness(.99)}
+body[data-time="night"] .play-card{filter:saturate(.94) brightness(.94)}
+@media (prefers-reduced-motion: no-preference){.play-card{transition:transform .18s,border-color .2s,filter .8s,background .8s}.play-card:hover{transform:translateY(-2px)}}
+
+/* Game screens */
+.screen{display:none;min-height:100svh;padding:20px 16px 30px;background:radial-gradient(ellipse at top,#241a40 0%,#111323 45%,#090d18 85%);animation:homeIn .35s ease both}
+.screen.active{display:block}.screen-wrap{width:min(100%,620px);margin:0 auto}.screen-top{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.back-btn,.icon-btn{border:1px solid #393452;background:#19182b;color:#f4f3ff;border-radius:13px;min-width:43px;height:43px;font-size:20px}
+.screen-title{font-size:19px;font-weight:850}.screen-sub{font-size:11px;color:#aaa9c2;margin-top:4px}
+.panel{border:1px solid #34304c;border-radius:20px;padding:17px;background:linear-gradient(140deg,#1c1b31,#141827);margin:14px 0}
+.panel h3{margin:0 0 12px;font-size:14px}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice{padding:15px 12px;border:1px solid #3b3657;background:#17182a;color:#f4f3ff;border-radius:15px;text-align:left;min-height:72px}
+.choice strong{display:block;font-size:13px}.choice small{display:block;color:#a9a7c2;margin-top:5px;font-size:10px;line-height:1.4}
+.choice.selected{border-color:#a28aff;background:linear-gradient(140deg,#382a61,#211b3d);box-shadow:0 0 0 1px #a28aff24}
+.primary-btn{width:100%;border:0;border-radius:15px;padding:16px 18px;font-weight:850;font-size:14px;color:white;background:linear-gradient(110deg,#7356e8,#a345bb);box-shadow:0 8px 22px #6744ca38;margin-top:8px}
+.secondary-btn{border:1px solid #494064;border-radius:13px;padding:12px;background:#201d35;color:#d8d2ff;font-weight:750}
+.game-topline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:13px}
+.turn-pill{font-size:11px;color:#d8d0ff;border:1px solid #4a3d72;background:#211c38;border-radius:30px;padding:8px 12px}
+/* Reference-matched portrait Ludo arena */
+#gameScreen{padding:0 0 14px;min-height:100vh;background-color:#123f78;background-image:linear-gradient(125deg,#102b57a8,#257dc5a8 48%,#081d46b8),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%234a92d2' fill-opacity='.28' stroke='%230b2d62' stroke-opacity='.4' stroke-width='3'%3E%3Cpath d='M90 0L180 45 135 135 45 90Z'/%3E%3Cpath d='M0 90L45 45 135 90 90 180Z'/%3E%3C/g%3E%3Cg fill='%230a2c61' fill-opacity='.7'%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3Ccircle cx='135' cy='135' r='10'/%3E%3C/g%3E%3C/svg%3E");background-size:cover,180px 180px}
+#gameScreen .screen-wrap{width:100%;max-width:840px;margin:0 auto}
+#gameScreen .screen-top,#gameScreen .game-topline{display:none}
+.board-frame{background:transparent;border:0;border-radius:0;padding:0;box-shadow:none;width:calc(100% - 28px);aspect-ratio:1;max-width:800px;margin:10px auto 0;touch-action:manipulation}
+.ludo-board{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 1px #001c3d66)}
+.video-player-row{width:calc(100% - 100px);max-width:700px;margin:0 auto;display:flex;justify-content:space-between;gap:24px;height:94px;align-items:center}
+.video-top-row{margin-top:14px}
+.video-bottom-row{margin-top:8px}
+.player-slot{height:72px;flex:1;max-width:245px;border:3px solid #f4d83d;border-radius:3px;background:linear-gradient(90deg,#0752b5,#073d88);box-shadow:inset 0 0 0 2px #ffffff55;display:flex;align-items:center;justify-content:space-around;padding:4px;position:relative}
+.player-dice{height:58px;width:58px;display:grid;place-items:center;flex-shrink:0;border:2px solid #aaa;border-radius:12px;background:linear-gradient(145deg,#fff 0%,#f7f7f7 48%,#d5d5d5 100%);box-shadow:inset 2px 2px 3px #fff,inset -4px -5px 7px #b8b8b8,3px 5px 0 #777,0 8px 12px #00142b88;color:#050505;font-size:39px;font-weight:950;text-shadow:0 1px 0 #fff;transform:rotateX(10deg) rotateY(-12deg);transition:transform .18s;position:relative;line-height:1}
+.player-slot:has(.die-red){background:linear-gradient(135deg,#ed2636,#8c0e1e)}
+.player-slot:has(.die-green){background:linear-gradient(135deg,#17a65a,#075b32)}
+.player-slot:has(.die-blue){background:linear-gradient(135deg,#169de8,#07518d)}
+.player-slot:has(.die-yellow){background:linear-gradient(135deg,#f3c928,#a98200)}
+.player-dice::after{content:"";position:absolute;inset:3px;border-radius:9px;border:1px solid #fff9;pointer-events:none}
+.player-dice.die-red,.player-dice.die-blue,.player-dice.die-green,.player-dice.die-yellow{background:linear-gradient(145deg,#fff 0%,#f7f7f7 48%,#d5d5d5 100%);border-color:#aaa;color:#050505;box-shadow:inset 2px 2px 3px #fff,inset -4px -5px 7px #b8b8b8,3px 5px 0 #777,0 8px 12px #00142b88;text-shadow:0 1px 0 #fff}
+.player-slot:active .player-dice{transform:translateY(3px) rotateX(0) rotateY(0);box-shadow:inset 2px 2px 3px #fff,0 2px 0 #8b7d91,0 3px 5px #00142b88}
+.player-dice{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;padding:8px;background:linear-gradient(145deg,#fff 0%,#f7f7f7 52%,#d0d0d0 100%);border:2px solid #aaa;color:#050505;border-radius:12px;box-shadow:inset 2px 2px 3px #fff,inset -4px -5px 7px #b8b8b8,3px 5px 0 #777,0 8px 12px #00142b88;text-shadow:none;font-size:0;position:relative;overflow:hidden}.player-dice .pip-dot{width:100%;height:100%;max-width:10px;max-height:10px;align-self:center;justify-self:center;border-radius:50%;background:radial-gradient(circle at 30% 25%,#333,#000 70%);box-shadow:0 1px 1px #fff8}.player-dice .pip-dot:nth-child(1){grid-area:1/1}.player-dice .pip-dot:nth-child(2){grid-area:1/3}.player-dice .pip-dot:nth-child(3){grid-area:2/1}.player-dice .pip-dot:nth-child(4){grid-area:2/2}.player-dice .pip-dot:nth-child(5){grid-area:2/3}.player-dice .pip-dot:nth-child(6){grid-area:3/1}.player-dice .pip-dot:nth-child(7){grid-area:3/3}
+.player-dice.rolling{animation:diceTumble .7s cubic-bezier(.18,.72,.22,1) both;will-change:transform}
+.token-base{transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 2px 2px #1118)}
+.token-base.spin{animation:baseSpin .9s linear infinite}
+@keyframes baseSpin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.08)}100%{transform:rotate(360deg) scale(1)}}
+.token-pin{filter:drop-shadow(2px 3px 2px #0008)}
+@keyframes diceTumble{0%{transform:perspective(500px) translateY(0) rotateX(10deg) rotateY(-12deg) scale(1)}18%{transform:perspective(500px) translateY(-42px) rotateX(220deg) rotateY(180deg) scale(1.12)}42%{transform:perspective(500px) translateY(-54px) rotateX(500deg) rotateY(420deg) scale(.96)}68%{transform:perspective(500px) translateY(-34px) rotateX(760deg) rotateY(700deg) scale(1.08)}88%{transform:perspective(500px) translateY(-10px) rotateX(940deg) rotateY(870deg) scale(.98)}100%{transform:perspective(500px) translateY(0) rotateX(1080deg) rotateY(1080deg) scale(1)}}18%{transform:perspective(500px) rotateX(220deg) rotateY(180deg) scale(1.12)}42%{transform:perspective(500px) rotateX(500deg) rotateY(420deg) scale(.94)}68%{transform:perspective(500px) rotateX(760deg) rotateY(700deg) scale(1.08)}88%{transform:perspective(500px) rotateX(940deg) rotateY(870deg) scale(.98)}100%{transform:perspective(500px) rotateX(1080deg) rotateY(1080deg) scale(1)}}
+.player-pin{width:39px;height:48px;display:grid;place-items:center;position:relative;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:1px 3px 4px #00152e99;color:#fff;font-size:21px;text-shadow:0 1px 2px #111}
+.player-pin::first-letter{transform:rotate(45deg)}
+.red-pin{background:#df1726}.green-pin{background:#079b4e}.blue-pin{background:#179fe3}.yellow-pin{background:#ffdf13;color:#fff}
+#gameScreen .video-status{max-width:800px;margin:0 auto;padding:3px 12px;text-align:center;color:#fff;font-size:10px;text-shadow:0 1px 3px #00152e;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#gameScreen .video-status span{opacity:.9}
+#gameScreen .video-status #gameLog{flex-basis:100%;margin:0;min-height:12px}
+#gameScreen .dice-face{width:64px;height:64px;border-radius:10px;background:linear-gradient(#fff2ef,#e4b6bb);border:3px solid #c9a8aa;color:#111;font-size:32px;box-shadow:0 0 0 3px #f5dc4c}
+#gameScreen .dice-button{border:3px solid #f5d84c;background:linear-gradient(120deg,#0750a9,#0a2d68);border-radius:8px;padding:7px}
+#gameScreen .game-controls{display:none}
+@media(max-width:420px){#gameScreen{padding-bottom:10px}.board-frame{width:calc(100% - 16px);margin-top:4px}.video-player-row{width:calc(100% - 50px);height:72px;gap:16px}.video-top-row{margin-top:8px}.player-slot{height:60px;padding:3px}.player-dice{width:48px;height:48px;font-size:26px}.player-pin{width:31px;height:38px;font-size:16px}.video-bottom-row{margin-top:5px}}
+.game-controls{margin:14px auto 0;max-width:600px;gap:10px}
+#gameScreen .dice-button{border:3px solid #f5d84c;background:linear-gradient(120deg,#0750a9,#0a2d68);border-radius:8px;padding:7px;box-shadow:0 4px 0 #05234c, inset 0 0 0 1px #ffffff55}
+#gameScreen .dice-face{width:48px;height:48px;flex-shrink:0;border-radius:8px;background:linear-gradient(#fff7f4,#e9bfc4);border:2px solid #c3a4a7;color:#111;box-shadow:inset 0 2px 5px #fff}
+#gameScreen .dice-button strong{font-size:11px;color:#fff}
+#gameScreen .dice-button small{color:#dbeaff}
+#gameScreen .log-line{color:#fff;background:#061b3dc9;border:1px solid #ffffff26;border-radius:10px;padding:9px;margin-top:12px}
+@media(max-width:420px){#gameScreen{padding:8px 7px 18px}#gameScreen .screen-top{margin-bottom:8px}.board-frame{padding:2px}#gameScreen .game-controls{gap:7px}#gameScreen .dice-button{gap:7px;padding:5px}.dice-face{width:40px;height:40px}}
+.game-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
+.dice-button{border:1px solid #6b5b9e;background:linear-gradient(140deg,#2c2549,#1a1a2e);border-radius:17px;color:#fff;padding:12px;display:flex;align-items:center;gap:12px;text-align:left}
+.dice-face{width:48px;height:48px;background:#f8f7ff;color:#382c62;border-radius:12px;display:grid;place-items:center;font-size:29px;box-shadow:inset 0 -3px 0 #d6d0ed}
+.dice-button strong{display:block;font-size:12px}.dice-button small{display:block;color:#aaa7c5;font-size:10px;margin-top:4px}
+.log-line{font-size:12px;color:#b7b2d3;line-height:1.5;margin-top:12px;min-height:18px;text-align:center}
+.room-code{font-size:30px;font-weight:950;letter-spacing:7px;text-align:center;color:#d0c2ff;padding:15px;border:1px dashed #64558f;border-radius:14px;background:#17152a}
+.room-row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #ffffff10;font-size:12px;color:#c8c5dc}.room-row:last-child{border:0}
+@media(min-width:540px){.screen{padding:28px 24px}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Loading page switches directly to Home without the cinematic transition. */
+#transitionFX{display:none!important}
+
+
+/* Physical-looking 3D dice cube: white faces, black pips, soft bevel and shadow. */
+.player-dice{display:grid!important;place-items:center!important;padding:0!important;overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;perspective:500px;font-size:0!important}
+.player-dice::after{display:none!important}
+.die-cube{--cube:44px;position:relative;width:var(--cube);height:var(--cube);display:block;transform-style:preserve-3d;transform:rotateX(0deg) rotateY(0deg);filter:drop-shadow(0 4px 3px #0005)}
+.die-face{position:absolute;inset:0;width:var(--cube);height:var(--cube);box-sizing:border-box;border:1px solid #b8b8b8;border-radius:10px;background:linear-gradient(145deg,#fff 0%,#fafafa 56%,#e1e1e1 100%);box-shadow:inset 1px 1px 2px #fff,inset -2px -3px 4px #c7c7c7;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;padding:6px;backface-visibility:hidden}
+.die-face.front{transform:translateZ(calc(var(--cube)/2))}
+.die-face.back{transform:rotateY(180deg) translateZ(calc(var(--cube)/2))}
+.die-face.right{transform:rotateY(90deg) translateZ(calc(var(--cube)/2))}
+.die-face.left{transform:rotateY(-90deg) translateZ(calc(var(--cube)/2))}
+.die-face.top{transform:rotateX(90deg) translateZ(calc(var(--cube)/2))}
+.die-face.bottom{transform:rotateX(-90deg) translateZ(calc(var(--cube)/2))}
+.die-face .pip-dot{display:block;width:7px;height:7px;align-self:center;justify-self:center;border-radius:50%;background:radial-gradient(circle at 30% 25%,#222,#000 72%);box-shadow:inset 0 1px 1px #0008,0 1px 0 #fff}
+.die-face .pip-dot:nth-child(1){grid-area:1/1}.die-face .pip-dot:nth-child(2){grid-area:1/3}.die-face .pip-dot:nth-child(3){grid-area:2/1}.die-face .pip-dot:nth-child(4){grid-area:2/2}.die-face .pip-dot:nth-child(5){grid-area:2/3}.die-face .pip-dot:nth-child(6){grid-area:3/1}.die-face .pip-dot:nth-child(7){grid-area:3/3}.die-face .pip-dot:nth-child(8){grid-area:3/2}.die-face .pip-dot:nth-child(9){grid-area:1/2}
+.player-dice.rolling{animation:diceLiftDrop3D .7s cubic-bezier(.2,.75,.25,1) both!important;will-change:transform;position:relative;z-index:20}
+.player-dice.rolling .die-cube{animation:solidCubeSpin3D .7s cubic-bezier(.2,.75,.25,1) both;transform-style:preserve-3d;backface-visibility:visible}
+.player-dice.rolling .die-face{backface-visibility:hidden;box-shadow:inset 1px 1px 2px #fff,inset -3px -4px 5px #b8b8b8,0 0 1px #999}
+@keyframes diceLiftDrop3D{0%{transform:translateY(0) scale(1)}10%{transform:translateY(-62px) scale(1.12)}24%{transform:translateY(-70px) scale(1.18)}56%{transform:translateY(-66px) scale(1.14)}72%{transform:translateY(-40px) scale(1.08)}86%{transform:translateY(3px) scale(.98)}93%{transform:translateY(-4px) scale(1.02)}100%{transform:translateY(0) scale(1)}}
+@keyframes solidCubeSpin3D{0%{transform:rotateX(-18deg) rotateY(-25deg)}12%{transform:rotateX(100deg) rotateY(130deg)}28%{transform:rotateX(310deg) rotateY(260deg)}48%{transform:rotateX(560deg) rotateY(470deg)}65%{transform:rotateX(760deg) rotateY(650deg)}80%{transform:rotateX(900deg) rotateY(810deg)}92%{transform:rotateX(1040deg) rotateY(930deg)}100%{transform:rotateX(1080deg) rotateY(1080deg)}}
+@media(max-width:380px){.die-cube{--cube:38px}.die-face{padding:5px}.die-face .pip-dot{width:6px;height:6px}}
+
+
+/* Dice station styled to match the supplied reference: pin on blue panel, die in a raised pink inset. */
+.player-slot{height:82px!important;max-width:245px!important;border:5px solid #f4d83d!important;border-radius:18px!important;background:linear-gradient(105deg,#0755bd 0%,#0750ad 42%,#9bc8c5 58%,#f0d2d5 100%)!important;box-shadow:inset 0 0 0 2px #ffffff55,0 3px 8px #00152d55!important;justify-content:space-between!important;padding:4px 9px!important;overflow:visible!important;}
+.player-slot::before{content:"";position:absolute;right:4px;top:3px;bottom:3px;width:53%;border-radius:16px;background:linear-gradient(145deg,#fff0f0 0%,#f5dfe0 58%,#eabfc5 100%);border:3px solid #a98b91;box-shadow:inset 0 0 0 2px #ffffffa8,inset 0 -4px 7px #b77e8b66;pointer-events:none;}
+.player-pin{position:relative;z-index:2;flex-shrink:0;filter:drop-shadow(0 2px 2px #00152d88)!important;}
+.player-dice{position:relative!important;z-index:3!important;flex:0 0 54px!important;width:54px!important;height:54px!important;}
+.die-cube{--cube:52px!important;filter:drop-shadow(0 4px 3px #0007)!important;}
+.die-face{border-radius:9px!important;border:1.5px solid #9d9d9d!important;}
+@media(max-width:420px){.player-slot{height:70px!important;padding:3px 7px!important;border-width:4px!important}.player-slot::before{width:54%;right:3px}.player-dice{flex-basis:46px!important;width:46px!important;height:46px!important}.die-cube{--cube:44px!important}}
+
+
+/* Solid, clearly box-shaped dice during the roll: stronger perspective, thick-looking shaded sides. */
+.player-dice{perspective:260px!important;perspective-origin:50% 45%!important;transform-style:preserve-3d!important;}
+.die-cube{transform-style:preserve-3d!important;backface-visibility:visible!important;filter:drop-shadow(0 8px 5px #0008)!important;}
+.die-face{backface-visibility:visible!important;border:2px solid #a4a4a4!important;border-radius:8px!important;background:linear-gradient(145deg,#fff 0%,#f2f2f2 48%,#c9c9c9 100%)!important;box-shadow:inset 2px 2px 3px #fff,inset -4px -4px 7px #999,0 0 2px #777!important;}
+.die-face.right{background:linear-gradient(120deg,#c8c8c8,#8e8e8e 88%)!important;}
+.die-face.left{background:linear-gradient(120deg,#b8b8b8,#777 88%)!important;}
+.die-face.top{background:linear-gradient(145deg,#fff,#dedede 78%)!important;}
+.die-face.bottom{background:linear-gradient(145deg,#aaa,#707070)!important;}
+.die-face.back{background:linear-gradient(145deg,#e4e4e4,#aaa)!important;}
+.player-dice.rolling .die-cube{animation:solidCubeSpin3D .7s cubic-bezier(.2,.75,.25,1) both!important;transform-style:preserve-3d!important;}
+.player-dice:not(.rolling) .die-cube{transform:rotateX(0deg) rotateY(0deg)!important;filter:drop-shadow(0 3px 3px #0005)!important}
+.player-dice:not(.rolling) .die-face:not(.front){display:none!important}
+.player-dice:not(.rolling) .die-face.front{transform:none!important;backface-visibility:visible!important;background:linear-gradient(145deg,#fff 0%,#f8f8f8 65%,#e6e6e6 100%)!important;border:2px solid #a9a9a9!important;border-radius:10px!important;box-shadow:inset 2px 2px 3px #fff,inset -3px -4px 5px #c4c4c4,0 1px 1px #999!important}
+.die-face .pip-dot{width:8px;height:8px}
+@keyframes solidCubeSpin3D{0%{transform:rotateX(-22deg) rotateY(-28deg)}15%{transform:rotateX(135deg) rotateY(160deg)}32%{transform:rotateX(330deg) rotateY(285deg)}52%{transform:rotateX(555deg) rotateY(480deg)}72%{transform:rotateX(770deg) rotateY(675deg)}88%{transform:rotateX(960deg) rotateY(840deg)}100%{transform:rotateX(1080deg) rotateY(1080deg)}}
+
+/* Clean dice-only stations: no player pins or blue side panels. */
+#gameScreen .player-slot{height:82px!important;max-width:245px!important;min-width:0!important;border:5px solid #f4d83d!important;border-radius:18px!important;background:linear-gradient(145deg,#fff4f3 0%,#f5dfe0 58%,#e9bdc4 100%)!important;box-shadow:inset 0 0 0 3px #ffffffa8,inset 0 -4px 8px #b77e8b55,0 3px 8px #00152d55!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:6px!important;overflow:visible!important;position:relative!important;}
+#gameScreen .player-slot::before{content:none!important;display:none!important}
+#gameScreen .player-pin{display:none!important}
+#gameScreen .player-dice{margin:0 auto!important;flex:0 0 54px!important;width:54px!important;height:54px!important;}
+@media(max-width:420px){#gameScreen .player-slot{height:70px!important;padding:3px!important;border-width:4px!important}#gameScreen .player-dice{flex-basis:46px!important;width:46px!important;height:46px!important}}
+
+
+/* Final compact-fit dice stations: box hugs the die with a small even margin. */
+#gameScreen .video-player-row{width:calc(100% - 52px)!important;max-width:590px!important;justify-content:space-between!important;gap:10px!important;height:64px!important;}
+#gameScreen .player-slot{flex:0 1 112px!important;width:112px!important;max-width:112px!important;height:58px!important;min-width:0!important;padding:3px!important;border-width:3px!important;border-radius:13px!important;overflow:visible!important;}
+#gameScreen .player-dice{flex:0 0 38px!important;width:38px!important;height:38px!important;}
+#gameScreen .die-cube{--cube:38px!important;}
+#gameScreen .die-face{padding:4px!important;border-radius:7px!important;}
+#gameScreen .die-face .pip-dot{width:6px!important;height:6px!important;}
+@media(max-width:420px){
+ #gameScreen .video-player-row{width:calc(100% - 54px)!important;height:58px!important;gap:8px!important;}
+ #gameScreen .player-slot{flex:0 1 100px!important;width:100px!important;max-width:100px!important;height:52px!important;padding:2px!important;border-width:3px!important;border-radius:12px!important;}
+ #gameScreen .player-dice{flex:0 0 34px!important;width:34px!important;height:34px!important;}
+ #gameScreen .die-cube{--cube:34px!important;}
+ #gameScreen .die-face{padding:3px!important;border-radius:6px!important;}
+ #gameScreen .die-face .pip-dot{width:5px!important;height:5px!important;}
+}
+
+
+/* Keep the die at its current size; tighten only the surrounding station so it hugs the die. */
+#gameScreen .player-slot{flex:0 0 46px!important;width:46px!important;max-width:46px!important;height:46px!important;min-width:46px!important;padding:2px!important;border-width:2px!important;border-radius:9px!important;box-sizing:border-box!important;overflow:visible!important;}
+#gameScreen .player-dice{flex:0 0 38px!important;width:38px!important;height:38px!important;}
+#gameScreen .die-cube{--cube:38px!important;}
+@media(max-width:420px){#gameScreen .player-slot{flex-basis:42px!important;width:42px!important;max-width:42px!important;min-width:42px!important;height:42px!important;padding:2px!important;border-width:2px!important;border-radius:8px!important;}#gameScreen .player-dice{flex-basis:34px!important;width:34px!important;height:34px!important;}#gameScreen .die-cube{--cube:34px!important;}}
+
+
+/* Cleaner game view: hide explanatory text and enlarge the dice without changing the board. */
+#gameScreen .video-status{display:none!important}
+#gameScreen .game-toolbar{display:flex;justify-content:flex-end;width:calc(100% - 24px);max-width:600px;margin:0 auto 6px}
+#gameScreen .fullscreen-btn{border:1px solid #7668c8;background:linear-gradient(135deg,#30265d,#171a31);color:#fff;border-radius:10px;padding:8px 12px;font-weight:800;font-size:12px;cursor:pointer}
+#gameScreen .player-slot{flex:0 0 52px!important;width:52px!important;max-width:52px!important;min-width:52px!important;height:52px!important;padding:2px!important;border-width:2px!important;border-radius:10px!important;box-sizing:border-box!important}
+#gameScreen .player-dice{flex:0 0 44px!important;width:44px!important;height:44px!important}
+#gameScreen .die-cube{--cube:44px!important}
+#gameScreen .die-face{padding:4px!important;border-radius:7px!important}
+#gameScreen .die-face .pip-dot{width:6px!important;height:6px!important}
+@media(max-width:420px){#gameScreen .player-slot{flex-basis:48px!important;width:48px!important;max-width:48px!important;min-width:48px!important;height:48px!important}#gameScreen .player-dice{flex-basis:40px!important;width:40px!important;height:40px!important}#gameScreen .die-cube{--cube:40px!important}}
+#gameScreen:fullscreen{overflow:auto;background:var(--navy);padding:8px;display:flex;align-items:center;justify-content:center}
+#gameScreen:fullscreen .screen-wrap{width:min(100%,760px);max-width:760px}
+#gameScreen:fullscreen .board-frame{max-height:calc(100svh - 190px)}
+
+
+/* LUFAN Professional Player Profile — isolated from gameplay styles */
+#lufanProfileOverlay{position:fixed;inset:0;z-index:10000;display:none;overflow-y:auto;background:radial-gradient(ellipse at 50% 0%,#24194b 0%,#0a0d1a 55%,#070a13 100%);color:#f6f5ff;padding:calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));}
+#lufanProfileOverlay.open{display:block}
+#lufanProfileOverlay *{box-sizing:border-box}
+.lpf-wrap{width:min(100%,650px);margin:0 auto}.lpf-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}.lpf-iconbtn{width:42px;height:42px;border-radius:14px;border:1px solid #35345b;background:#11172a;color:#fff;font-size:23px;display:grid;place-items:center}.lpf-title{font-size:20px;font-weight:850;flex:1}.lpf-brand{font-size:16px;font-weight:950;letter-spacing:1.8px;color:#a998ff}.lpf-brand small{display:block;font-size:7px;letter-spacing:1.2px;color:#9fa5c7;font-weight:650;text-align:right}.lpf-hero{position:relative;text-align:center;padding:23px 16px 20px;border:1px solid #39336a;border-radius:25px;background:linear-gradient(145deg,#171b36d9,#101629f2);overflow:hidden}.lpf-hero:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#743bff18;filter:blur(20px);top:-130px;left:calc(50% - 110px)}.lpf-avatar{position:relative;width:104px;height:104px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-size:48px;background:radial-gradient(circle at 35% 20%,#a78bfa,#4c1d95 70%,#172554);border:3px solid #9272ff;box-shadow:0 0 0 5px #7654ff20,0 12px 28px #0006}.lpf-editavatar{position:absolute;right:calc(50% - 57px);top:99px;width:33px;height:33px;border:2px solid #15172d;border-radius:50%;background:linear-gradient(135deg,#925cff,#386cff);color:#fff}.lpf-name{font-size:22px;font-weight:850;margin:8px 0 5px;overflow-wrap:anywhere}.lpf-id{font-size:12px;color:#aeb8d6;display:flex;align-items:center;justify-content:center;gap:7px}.lpf-copy{border:0;background:transparent;color:#b9a8ff;font-size:16px;padding:2px}.lpf-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.lpf-stat{padding:15px 12px;border:1px solid #293654;border-radius:17px;background:linear-gradient(140deg,#111c32,#101629)}.lpf-stat strong{display:block;font-size:23px;margin:7px 0 3px}.lpf-stat span{font-size:11px;color:#aab5d1}.lpf-stat em{font-style:normal;font-size:20px}.lpf-card{padding:17px;margin-top:13px;border:1px solid #293451;border-radius:20px;background:#0e1629d9}.lpf-cardhead{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;margin-bottom:12px}.lpf-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid #202b43;font-size:13px;color:#c7cde0}.lpf-row strong{color:#bda8ff}.lpf-actions{display:grid;gap:9px}.lpf-action{display:flex;align-items:center;gap:11px;width:100%;padding:13px 14px;border:1px solid #343657;border-radius:13px;background:#11182b;color:#e9eaff;text-align:left;font-size:13px}.lpf-action span:first-child{font-size:18px;width:23px;text-align:center}.lpf-action .lpf-chevron{margin-left:auto;color:#8f91b5;font-size:20px}.lpf-logout{color:#ff718e;border-color:#593044}.lpf-modal{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;padding:18px;background:#030611c9;backdrop-filter:blur(8px)}.lpf-modal.open{display:flex}.lpf-dialog{width:min(100%,430px);max-height:85dvh;overflow:auto;border:1px solid #424071;border-radius:23px;padding:20px;background:linear-gradient(145deg,#171b35,#0b1120);box-shadow:0 20px 70px #0009}.lpf-dialog h2{margin:0 0 7px;font-size:20px}.lpf-muted{color:#a8afca;font-size:12px;line-height:1.5}.lpf-label{display:block;margin:15px 0 7px;color:#c4c9e0;font-size:12px}.lpf-input{width:100%;padding:13px;border-radius:12px;border:1px solid #383b60;background:#0a1020;color:#fff;font:inherit;outline:none}.lpf-input:focus{border-color:#9274ff;box-shadow:0 0 0 3px #9274ff20}.lpf-avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}.lpf-avatar-choice{aspect-ratio:1;border:1px solid #343858;border-radius:13px;background:#121a30;font-size:24px}.lpf-avatar-choice.selected{border:2px solid #a18aff;background:#32245e;box-shadow:0 0 0 3px #8b5cf622}.lpf-buttons{display:flex;gap:9px;margin-top:20px}.lpf-btn{flex:1;padding:13px;border-radius:13px;border:1px solid #41466b;background:#11182b;color:#f6f5ff;font-weight:750}.lpf-btn.primary{border:0;background:linear-gradient(110deg,#7c3aed,#456dff)}.lpf-btn.danger{color:#ff8198;border-color:#6c3345}.lpf-toast{position:fixed;z-index:10010;left:50%;bottom:calc(25px + env(safe-area-inset-bottom));transform:translate(-50%,15px);opacity:0;pointer-events:none;padding:11px 16px;border-radius:12px;background:#272344;border:1px solid #5c4c96;color:#f3edff;font-size:12px;transition:.2s;max-width:90vw;text-align:center}.lpf-toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:560px){.lpf-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.lpf-stat{padding:14px 8px}.lpf-stat strong{font-size:20px}}
+
+
+/* Professional leave-game confirmation dialog */
+#leaveGameDialog{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(3,7,18,.76);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#leaveGameDialog.open{display:flex;animation:leaveFadeIn .18s ease-out both}
+#leaveGameDialog .leave-card{width:min(100%,370px);padding:25px 22px 20px;border:1px solid #3b3658;border-radius:22px;background:linear-gradient(145deg,#201d35,#121827);box-shadow:0 24px 70px #0008;color:#f4f3ff;text-align:center}
+#leaveGameDialog .leave-icon{width:48px;height:48px;margin:0 auto 15px;display:grid;place-items:center;border-radius:15px;background:#8b7cff20;border:1px solid #a99aff50;color:#c7bdff;font-size:23px}
+#leaveGameDialog h2{margin:0 0 9px;font-size:21px;letter-spacing:-.35px;font-weight:850}
+#leaveGameDialog p{margin:0;color:#b8bbcf;font-size:13px;line-height:1.6}
+#leaveGameDialog .leave-actions{display:flex;gap:10px;margin-top:23px}
+#leaveGameDialog button{flex:1;min-height:45px;border-radius:12px;font-family:inherit;font-size:12px;font-weight:750;line-height:1.2;cursor:pointer;padding:11px 9px}
+#leaveGameDialog .stay-btn{border:1px solid #494064;background:#242039;color:#e2ddff}
+#leaveGameDialog .leave-btn{border:1px solid #8f70f2;background:linear-gradient(110deg,#7356e8,#9347ba);color:white;box-shadow:0 6px 16px #6744ca38}
+@keyframes leaveFadeIn{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){#leaveGameDialog.open{animation:none}}
+
+.room-select.code-valid{border-color:#38d996!important;box-shadow:0 0 0 1px #38d996 inset,0 0 18px #38d99620}.room-select.code-invalid{border-color:#ff7185!important;box-shadow:0 0 0 1px #ff7185 inset}.room-note.code-valid-text{color:#72e8b1}.room-note.code-invalid-text{color:#ff9aa9}
+.room-modal{display:none;position:fixed;inset:0;z-index:10000;background:#080a16dd;backdrop-filter:blur(9px);align-items:center;justify-content:center;padding:18px}.room-modal.open{display:flex}.room-modal-card{width:min(100%,440px);max-height:90vh;overflow:auto;background:#171a2b;border:1px solid #414767;border-radius:22px;padding:22px;box-shadow:0 24px 80px #0009}.room-modal-card h2{margin:0 0 8px;font-size:23px}.room-label{display:block;font-size:12px;font-weight:800;color:#c9cbe0;margin:16px 0 8px}.room-select,.room-join-row input{width:100%;box-sizing:border-box;border:1px solid #454967;background:#101323;color:#fff;border-radius:12px;padding:13px;font:inherit}.room-color-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.room-color-grid button{border:1px solid #444966;background:#111426;color:#e8e9f8;border-radius:12px;padding:12px;font-weight:800}.room-color-grid button.selected{border-color:#8b7cff;background:#2b2850;box-shadow:0 0 0 1px #8b7cff inset}.room-note{font-size:11px;line-height:1.6;color:#aaaec8}.room-modal-actions,.room-actions{display:flex;gap:9px;margin-top:12px}.room-modal-actions>* ,.room-actions>*{flex:1}.secondary-room-btn{background:#292d45!important;border:1px solid #4b506d!important}.room-join-row{display:flex;gap:8px}.room-join-row input{min-width:0}.room-join-row button{width:auto;white-space:nowrap;padding-left:14px;padding-right:14px}.room-player{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #ffffff12}.room-player:last-child{border-bottom:0}.room-player-dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#292d45;font-size:17px}.room-player-name{font-weight:800;font-size:13px}.room-player-meta{font-size:11px;color:#a9adc7;margin-top:3px}.room-player-status{margin-left:auto;font-size:10px;color:#a9e8c6;font-weight:800}
+
+</style>
+
+
+<style id="lufan-appearance-additions">
+.lpf-setting-note{font-size:11px;line-height:1.5;color:#aab5d1;margin:-3px 0 12px}
+.lpf-option-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lpf-option{border:1px solid #343657;border-radius:12px;padding:11px 6px;background:#11182b;color:#e9eaff;font-size:11px;font-weight:750}
+.lpf-option.selected,.lpf-theme.selected{border-color:var(--lufan-accent,#8b7cff);box-shadow:0 0 0 1px color-mix(in srgb,var(--lufan-accent,#8b7cff) 28%,transparent)}
+.lpf-theme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lpf-theme{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid #343657;border-radius:12px;padding:11px;background:#11182b;color:#e9eaff;font-size:11px;font-weight:750;min-height:48px}
+.lpf-theme i{flex:none;width:22px;height:22px;border-radius:50%;background:var(--swatch);box-shadow:0 0 0 4px color-mix(in srgb,var(--swatch) 18%,transparent)}
+body[data-lufan-theme="ocean"]{--lufan-accent:#24b8f2}body[data-lufan-theme="emerald"]{--lufan-accent:#20c997}body[data-lufan-theme="crimson"]{--lufan-accent:#ff5268}body[data-lufan-theme="sunset"]{--lufan-accent:#c16bff}body[data-lufan-theme="arctic"]{--lufan-accent:#48d9e8}body[data-lufan-theme]{--teal:var(--lufan-accent,#8b7cff)}
+body[data-lufan-theme] .lpf-brand,body[data-lufan-theme] .lpf-row strong{color:var(--lufan-accent,#8b7cff)}body[data-lufan-theme] .lpf-btn.primary{background:linear-gradient(110deg,var(--lufan-accent,#8b7cff),color-mix(in srgb,var(--lufan-accent,#8b7cff) 65%,#456dff))}
+body[data-lufan-mode="light"] #lufanProfileOverlay{background:linear-gradient(160deg,#f7f8ff,#edf1f8);color:#171b2a}
+body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-hero,body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-card,body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-stat{background:#fff;color:#171b2a;border-color:#dce1ef}
+body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-row{color:#3e465b;border-color:#e1e5ef}body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-stat span,body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-setting-note{color:#626b83}
+body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-action,body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-option,body[data-lufan-mode="light"] #lufanProfileOverlay .lpf-theme{background:#f7f8fc;color:#171b2a;border-color:#d9deed}
+@media(max-width:380px){.lpf-option-grid{grid-template-columns:1fr}.lpf-theme-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="lufan-brand-info-styles">
+/* LUFAN brand information dialog — isolated from existing home/game UI */
+.home-name#lufanInfoOpen{display:block;padding:0;border:0;background:transparent;color:inherit;font-family:inherit;font-weight:950;font-size:21px;letter-spacing:3px;line-height:1.2;cursor:pointer;text-align:left}
+.home-name#lufanInfoOpen:focus-visible{outline:2px solid #a998ff;outline-offset:4px;border-radius:4px}
+#lufanInfoModal{position:fixed;inset:0;z-index:12000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(4,6,15,.78);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+#lufanInfoModal.open{display:flex}
+#lufanInfoModal *{box-sizing:border-box}
+.lufan-info-card{width:min(100%,520px);max-height:min(82svh,720px);overflow:auto;border:1px solid #403967;border-radius:22px;padding:22px;background:linear-gradient(155deg,#191a32,#0d1120 75%);color:#f4f3ff;box-shadow:0 24px 80px #0009}
+.lufan-info-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.lufan-info-mark{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#c5b8ff,#6b50d5);font-size:22px;font-weight:950}
+.lufan-info-title{font-size:20px;font-weight:900;letter-spacing:2px}
+.lufan-info-sub{font-size:10px;color:#aaa5cb;letter-spacing:1.4px;margin-top:3px}
+.lufan-info-close{margin-left:auto;width:38px;height:38px;border:1px solid #3a3559;border-radius:12px;background:#17192d;color:#fff;font-size:23px;cursor:pointer}
+.lufan-info-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 16px}
+.lufan-info-tab{padding:10px 6px;border:1px solid #393451;border-radius:11px;background:#131629;color:#c9c5e5;font-size:11px;font-weight:750;cursor:pointer}
+.lufan-info-tab[aria-selected="true"]{background:#302553;border-color:#9986ff;color:#fff}
+.lufan-info-page{font-size:13px;line-height:1.7;color:#d2d1e7}
+.lufan-info-page h3{margin:0 0 8px;color:#fff;font-size:16px}
+.lufan-info-page p{margin:0 0 12px}
+.lufan-info-page ul{padding-left:19px;margin:7px 0 13px}
+.lufan-info-page li{margin:5px 0}
+.lufan-info-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.lufan-info-meta div{padding:11px;border:1px solid #34304d;border-radius:12px;background:#111528}
+.lufan-info-meta small{display:block;color:#a8a4c6;font-size:10px;margin-bottom:4px}
+.lufan-info-meta strong{font-size:12px;color:#fff}
+.lufan-info-foot{margin-top:16px;padding-top:12px;border-top:1px solid #302d48;color:#8f8ba9;font-size:10px;text-align:center}
+@media(max-width:380px){.lufan-info-card{padding:16px}.lufan-info-tab{font-size:10px}.lufan-info-title{font-size:18px}}
+</style>
+
+</head>
+<body>
+<main class="splash" aria-label="LUFAN loading screen">
+  <div class="glow one"></div><div class="glow two"></div><div class="orbit"></div>
+  <div class="brand-wrap">
+    <div class="dice-scene" aria-hidden="true">
+      <div class="dice-shadow"></div>
+      <div class="dice"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></div>
+      <div class="mini-die a">•</div><div class="mini-die b">✦</div>
+    </div>
+    <div class="brand">LUFAN</div>
+    <div class="tagline">YOUR LUDO WORLD</div>
+    <div class="accent"></div>
+  </div>
+  <div class="loader"><div class="load-text">LOADING YOUR GAME</div><div class="track"><div class="fill"></div></div><div class="dots"><i></i><i></i><i></i></div></div>
+  <div class="corner left">ROLL · RACE · RULE</div>
+</main>
+<main class="home" id="home">
+  <header class="home-head">
+    <div class="home-brand"><button type="button" class="home-mark" id="lufanMarkInfoOpen" aria-label="Open LUFAN information" aria-haspopup="dialog" aria-controls="lufanInfoModal">L</button><div><button type="button" class="home-name" id="lufanInfoOpen" aria-haspopup="dialog" aria-controls="lufanInfoModal">LUFAN</button><div class="home-tag">YOUR LUDO WORLD</div></div></div>
+    <button class="avatar" aria-label="Profile">♟</button>
+  </header>
+  <section class="welcome">
+    <div class="kicker">READY WHEN YOU ARE</div>
+    <h1>Let’s roll,<br><span>let’s play.</span></h1>
+    <p>Choose how you want to play. Bring your friends and make every move count.</p>
+  </section>
+  <div class="section-title"><h2>Choose your game</h2><span>GAME MODES</span></div>
+  <section class="play-cards">
+    <button class="play-card featured" data-play="Classic Ludo">
+      <div class="play-icon">🎲</div><div class="card-copy"><strong>Classic Ludo</strong><small>The timeless board game. Roll the dice and race home.</small></div><span class="arrow">›</span>
+    </button>
+    <button class="play-card" data-play="Create Room">
+      <div class="play-icon">👥</div><div class="card-copy"><strong>Create Room</strong><small>Create a private room and invite friends with a code.</small></div><span class="arrow">›</span>
+    </button>
+    <button class="play-card" data-play="Join Room">
+      <div class="play-icon">🔑</div><div class="card-copy"><strong>Join Room</strong><small>Enter your name and a room code to join a friend.</small></div><span class="arrow">›</span>
+    </button>
+  </section>
+  <div class="toast-home" id="homeToast"></div>
+  <footer class="home-foot">LUFAN&nbsp; · &nbsp;ROLL • RACE • RULE</footer>
+</main>
+
+
+<section id="lufanProfileOverlay" aria-label="Player profile" aria-hidden="true">
+ <div class="lpf-wrap">
+  <header class="lpf-top"><button class="lpf-iconbtn" id="lpfClose" aria-label="Close profile">‹</button><div class="lpf-title">Player Profile</div><div class="lpf-brand">LUFAN<small>YOUR LUDO WORLD</small></div></header>
+  <section class="lpf-hero"><div class="lpf-avatar" id="lpfHeroAvatar">♟</div><div class="lpf-name" id="lpfHeroName">Player</div><div class="lpf-id">Player ID: <strong id="lpfPlayerId">LF-000000</strong><button class="lpf-copy" id="lpfCopyId" aria-label="Copy player ID">▢</button></div></section>
+  <section class="lpf-stats" aria-label="Player statistics"><div class="lpf-stat"><em>🎮</em><strong id="lpfMatches">0</strong><span>Total Matches</span></div><div class="lpf-stat"><em>🏆</em><strong id="lpfWins">0</strong><span>Wins</span></div><div class="lpf-stat"><em>📉</em><strong id="lpfRate">—</strong><span>Win Rate</span></div><div class="lpf-stat"><em>🎲</em><strong id="lpfRolls">0</strong><span>Dice Rolls</span></div></section>
+  <section class="lpf-card"><div class="lpf-cardhead">📊 &nbsp; Game Statistics</div><div class="lpf-row"><span>🎮 Total Matches</span><strong id="lpfMatchesRow">0</strong></div><div class="lpf-row"><span>🏆 Wins</span><strong id="lpfWinsRow">0</strong></div><div class="lpf-row"><span>✕ Losses</span><strong id="lpfLosses">0</strong></div><div class="lpf-row"><span>📈 Win Rate</span><strong id="lpfRateRow">—</strong></div><div class="lpf-row"><span>🔥 Current Win Streak</span><strong id="lpfStreak">0</strong></div></section>
+  <section class="lpf-card"><div class="lpf-cardhead">⚙️ &nbsp; Profile Settings</div><div class="lpf-actions"><button class="lpf-action" id="lpfEditAction"><span>👤</span><span>Edit Profile<small style="display:block;color:#909bb8;margin-top:3px">Player name and avatar</small></span><span class="lpf-chevron">›</span></button><button class="lpf-action" id="lpfSoundAction"><span>🔊</span><span id="lpfSoundLabel">Sound &amp; Vibration</span><span class="lpf-chevron">›</span></button><button class="lpf-action" id="lpfPrivacyAction"><span>🛡️</span><span>Privacy &amp; Data<small style="display:block;color:#909bb8;margin-top:3px">Local browser storage information</small></span><span class="lpf-chevron">›</span></button><button class="lpf-action" id="lpfResetStats"><span>↻</span><span>Reset Statistics</span><span class="lpf-chevron">›</span></button></div></section>
+
+  <section class="lpf-card" id="lpfAppearanceCard"><div class="lpf-cardhead">🌓 &nbsp; Appearance Mode</div><p class="lpf-setting-note">Choose Dark or Light independently from the color theme.</p><div class="lpf-option-grid" id="lpfModeOptions"><button class="lpf-option selected" data-lpf-mode="dark">🌙 Dark Mode</button><button class="lpf-option" data-lpf-mode="light">☀️ Light Mode</button><button class="lpf-option" data-lpf-mode="system">📱 System Default</button></div></section>
+  <section class="lpf-card" id="lpfThemeCard"><div class="lpf-cardhead">🎨 &nbsp; App Theme</div><p class="lpf-setting-note">Changes accent colors only. Board theme remains separate.</p><div class="lpf-theme-grid" id="lpfThemeOptions">
+   <button class="lpf-theme selected" data-lpf-theme="midnight"><i style="--swatch:#8b7cff"></i><span>Midnight Purple</span></button>
+   <button class="lpf-theme" data-lpf-theme="ocean"><i style="--swatch:#24b8f2"></i><span>Ocean Blue</span></button>
+   <button class="lpf-theme" data-lpf-theme="emerald"><i style="--swatch:#20c997"></i><span>Emerald Green</span></button>
+   <button class="lpf-theme" data-lpf-theme="crimson"><i style="--swatch:#ff5268"></i><span>Crimson Red</span></button>
+   <button class="lpf-theme" data-lpf-theme="sunset"><i style="--swatch:#c16bff"></i><span>Sunset Violet</span></button>
+   <button class="lpf-theme" data-lpf-theme="arctic"><i style="--swatch:#48d9e8"></i><span>Arctic Cyan</span></button>
+  </div></section>
+  <section class="lpf-card" id="lpfAuthCard" style="margin-top:18px">
+   <div class="lpf-cardhead">🔐 &nbsp; Account Information</div>
+   <div class="lpf-muted" id="lpfAuthStatus">Sign in to keep your player account details together.</div>
+   <div class="lpf-actions" style="margin-top:12px">
+    <button class="lpf-action" id="lpfSignInButton"><span>↗</span><span>Sign In<small style="display:block;color:#909bb8;margin-top:3px">Sign in to your account</small></span><span class="lpf-chevron">›</span></button>
+    <button class="lpf-action" id="lpfLoginButton"><span>🔑</span><span>Login<small style="display:block;color:#909bb8;margin-top:3px">Access your account</small></span><span class="lpf-chevron">›</span></button>
+    <button class="lpf-action lpf-logout" id="lpfLogoutButton" disabled style="opacity:.45"><span>↪</span><span>Log Out<small style="display:block;color:#b78a9a;margin-top:3px">Sign out from this device</small></span><span class="lpf-chevron">›</span></button>
+   </div>
+  </section>
+ </div>
+</section>
+<div class="lpf-modal" id="lpfEditModal" role="dialog" aria-modal="true" aria-labelledby="lpfEditTitle"><div class="lpf-dialog"><h2 id="lpfEditTitle">Edit Profile</h2><div class="lpf-muted">Personalize your LUFAN player profile.</div><label class="lpf-label" for="lpfNameInput">Player name</label><input class="lpf-input" id="lpfNameInput" maxlength="24" placeholder="Enter player name" autocomplete="nickname"><div class="lpf-label">Choose your avatar</div><div class="lpf-avatar-grid" id="lpfAvatarGrid"><button class="lpf-avatar-choice" data-avatar="♟">♟</button><button class="lpf-avatar-choice" data-avatar="🦊">🦊</button><button class="lpf-avatar-choice" data-avatar="🦁">🦁</button><button class="lpf-avatar-choice" data-avatar="🐼">🐼</button><button class="lpf-avatar-choice" data-avatar="👑">👑</button><button class="lpf-avatar-choice" data-avatar="🥷">🥷</button></div><div class="lpf-buttons"><button class="lpf-btn" id="lpfEditCancel">Cancel</button><button class="lpf-btn primary" id="lpfEditSave">Save Changes</button></div></div></div>
+<div class="lpf-modal" id="lpfAuthModal" role="dialog" aria-modal="true" aria-labelledby="lpfAuthTitle"><div class="lpf-dialog"><h2 id="lpfAuthTitle">Login</h2><div class="lpf-muted">This local demo stores the sign-in state on this device only; it is not connected to a real authentication service.</div><label class="lpf-label" for="lpfAuthName">Player name</label><input class="lpf-input" id="lpfAuthName" maxlength="24" placeholder="Enter your player name" autocomplete="name"><label class="lpf-label" for="lpfAuthEmail">Email</label><input class="lpf-input" id="lpfAuthEmail" type="email" maxlength="120" placeholder="name@example.com" autocomplete="email"><div class="lpf-buttons"><button class="lpf-btn" id="lpfAuthCancel">Cancel</button><button class="lpf-btn primary" id="lpfAuthSubmit">Continue</button></div></div></div>
+<div class="lpf-modal" id="lpfConfirmModal" role="dialog" aria-modal="true" aria-labelledby="lpfConfirmTitle"><div class="lpf-dialog"><h2 id="lpfConfirmTitle">Are you sure?</h2><p class="lpf-muted" id="lpfConfirmText">This action cannot be undone.</p><div class="lpf-buttons"><button class="lpf-btn" id="lpfConfirmCancel">Cancel</button><button class="lpf-btn danger" id="lpfConfirmYes">Confirm</button></div></div></div><div class="lpf-toast" id="lpfToast" role="status"></div>
+
+<section class="screen" id="setupScreen">
+ <div class="screen-wrap">
+  <div class="screen-top"><button class="back-btn" data-back aria-label="Back">‹</button><div><div class="screen-title" id="setupHeading">Classic Ludo</div><div class="screen-sub">Set up your match</div></div></div>
+  <div class="panel"><h3>Game Mode</h3><div class="choice-grid" id="opponentChoices" style="grid-template-columns:1fr">
+   <button class="choice selected" data-opponent="local"><strong>👥 Pass & Play</strong><small>Take turns on this device</small></button>
+  </div></div>
+  <div class="panel"><h3>Players</h3><div class="choice-grid" id="playerChoices">
+   <button class="choice" data-players="2"><strong>2 Players</strong><small>Fast head-to-head match</small></button>
+   <button class="choice" data-players="3"><strong>3 Players</strong><small>Three-player match</small></button>
+   <button class="choice selected" data-players="4"><strong>4 Players</strong><small>Full classic Ludo board</small></button>
+  </div></div>
+  <div class="panel"><h3>Choose Token Colours</h3><div class="choice-grid" id="colorChoices">
+   <button class="choice selected" data-color-player="0"><strong>🔴 Red</strong><small>Red tokens</small></button>
+   <button class="choice selected" data-color-player="1"><strong>🔵 Blue</strong><small>Blue tokens</small></button>
+   <button class="choice selected" data-color-player="2"><strong>🟢 Green</strong><small>Green tokens</small></button>
+   <button class="choice selected" data-color-player="3"><strong>🟡 Yellow</strong><small>Yellow tokens</small></button>
+  </div></div>
+  <div class="panel"><h3>Board theme</h3><div class="choice-grid" id="themeChoices">
+   <button class="choice selected" data-theme="classic"><strong>🎨 Classic</strong><small>Traditional Ludo colours</small></button>
+   <button class="choice" data-theme="midnight"><strong>🌌 Midnight</strong><small>Deep premium colours</small></button>
+  </div></div>
+  <button class="primary-btn" id="startGame">START GAME&nbsp; →</button>
+ </div>
+</section>
+<section class="screen" id="gameScreen">
+ <div class="screen-wrap">
+  <div class="game-toolbar"><button type="button" id="fullscreenBtn" class="fullscreen-btn" aria-label="Enter full screen">⛶ Full Screen</button></div>
+  <div class="video-player-row video-top-row">
+   <button class="player-slot" id="topDiceRedSlot" type="button" data-player="0" aria-label="Red player dice"><span class="player-dice" id="topDiceRed">⚄</span></button>
+   <button class="player-slot" id="rollDice" data-player="2" aria-label="Green player dice"><span class="player-dice" id="diceFace">⚄</span></button>
+  </div>
+  <div class="board-frame"><svg id="ludoBoard" class="ludo-board" viewBox="0 0 600 600" role="img" aria-label="Interactive Ludo board"></svg></div>
+  <div class="video-player-row video-bottom-row">
+   <button class="player-slot" id="moveToken" data-player="1" aria-label="Blue player dice"><span class="player-dice" id="bottomDiceBlue">⚄</span></button>
+   <button class="player-slot" id="restartGame" data-player="3" aria-label="Yellow player dice"><span class="player-dice" id="bottomDiceYellow">⚄</span></button>
+  </div>
+  <div class="video-status" aria-live="polite"><span id="turnPill">🔴 Red's turn</span><span id="diceHint">Tap to roll</span><span id="moveHint">Roll a 6 to start</span><span id="gameLog">Roll a 6 to bring a token out of the yard.</span></div>
+ </div>
+</section>
+<section class="screen" id="roomScreen">
+ <div class="screen-wrap">
+  <div class="screen-top"><button class="back-btn" data-back aria-label="Back">‹</button><div><div class="screen-title">Room Lobby</div><div class="screen-sub">Invite friends to your Classic Ludo match</div></div></div>
+  <div class="panel"><h3>Your Room Code</h3><div class="room-code" id="roomCode">LUFAN-0000</div><p style="font-size:11px;color:#aaa9c2;line-height:1.6;text-align:center">Share this code with friends so they can find your room.</p><div class="room-actions"><button class="primary-btn" id="copyCode">COPY ROOM CODE</button><button class="primary-btn secondary-room-btn" id="shareRoom">SHARE ROOM</button></div></div>
+  <div class="panel"><h3>Players in Room <span id="roomPlayerCount" style="float:right;color:#a9e8c6">1/2</span></h3><div id="roomRoster" aria-live="polite"></div><p class="room-note" id="roomNotice">Share the room code so friends can join from the Home screen. Cross-device joining and live synchronization need an online server.</p></div>
+  <div class="panel"><h3>Room Settings</h3><div class="room-row"><span>Game mode</span><strong>Classic Ludo</strong></div><div class="room-row"><span>Players</span><strong id="roomPlayerSetting">2 Players</strong></div><div class="room-row"><span>Token colours</span><strong id="roomColorSetting">Blue + Green</strong></div><div class="room-row"><span>Room status</span><strong id="roomStatus" style="color:#a9e8c6">Waiting for players</strong></div><div class="room-row"><span>Access</span><strong>Private · Invite only</strong></div></div>
+  <button class="primary-btn" id="hostGame">START MATCH</button>
+ </div>
+</section>
+<div class="room-modal" id="createRoomModal" role="dialog" aria-modal="true" aria-labelledby="createRoomTitle"><div class="room-modal-card"><h2 id="createRoomTitle">Create Room</h2><p class="room-note">Choose how many players will join and which token colours they will use.</p><label class="room-label" for="roomPlayerCountSelect">Room for</label><select id="roomPlayerCountSelect" class="room-select"><option value="2">2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select><div class="room-label">Choose token colours</div><div class="room-color-grid" id="roomColorChoices"><button type="button" data-room-color="0">🔴 Red</button><button type="button" data-room-color="1">🔵 Blue</button><button type="button" data-room-color="2">🟢 Green</button><button type="button" data-room-color="3">🟡 Yellow</button></div><p class="room-note" id="roomCreateHint">Select exactly 2 colours.</p><div class="room-modal-actions"><button class="primary-btn secondary-room-btn" id="cancelCreateRoom">CANCEL</button><button class="primary-btn" id="confirmCreateRoom">CREATE ROOM</button></div></div></div>
+<div class="room-modal" id="joinRoomModal" role="dialog" aria-modal="true" aria-labelledby="joinRoomTitle"><div class="room-modal-card"><h2 id="joinRoomTitle">Join Room</h2><p class="room-note">Enter your player name and the room code shared by the host.</p><label class="room-label" for="joinModalPlayerName">Player name</label><input class="room-select" id="joinModalPlayerName" maxlength="24" placeholder="Enter your name" autocomplete="nickname"><label class="room-label" for="joinModalRoomCode">Room code</label><input class="room-select" id="joinModalRoomCode" maxlength="12" placeholder="e.g. LF-AB12" autocapitalize="characters" autocomplete="off" spellcheck="false" style="text-transform:uppercase"><p class="room-note" id="joinCodeHint" aria-live="polite">Room code will be checked as you type.</p><div class="room-modal-actions"><button class="primary-btn secondary-room-btn" id="cancelJoinRoom">CANCEL</button><button class="primary-btn" id="confirmJoinRoom" disabled>JOIN ROOM</button></div></div></div>
+
+<div id="transitionFX" aria-hidden="true"><div class="fx-ring"></div><div class="fx-ring"></div><div class="fx-word">LUFAN</div></div>
+<canvas id="magicTrail" aria-hidden="true"></canvas>
+<script>
+
+const fullscreenBtn=document.getElementById('fullscreenBtn');
+if(fullscreenBtn){fullscreenBtn.addEventListener('click',async()=>{try{if(!document.fullscreenElement){await (document.getElementById('gameScreen').requestFullscreen?.() || document.documentElement.requestFullscreen());}else{await document.exitFullscreen();}}catch(e){document.documentElement.classList.toggle('lufan-fullscreen-fallback');}});document.addEventListener('fullscreenchange',()=>{fullscreenBtn.textContent=document.fullscreenElement?'⤢ Exit Full Screen':'⛶ Full Screen';fullscreenBtn.setAttribute('aria-label',document.fullscreenElement?'Exit full screen':'Enter full screen');});}
+
+/* Set a subtle colour mood based on the visitor's local time. */
+function setTimeMood(){
+  const hour = new Date().getHours();
+  const mood = hour >= 5 && hour < 11 ? 'morning' : hour >= 11 && hour < 17 ? 'day' : hour >= 17 && hour < 21 ? 'evening' : 'night';
+  document.body.dataset.time = mood;
+}
+setTimeMood();
+setInterval(setTimeMood, 60000);
+/* Magical blue pen-light trail, active only while the Home page is visible. */
+const homePage = document.querySelector('#home');
+const trailCanvas = document.querySelector('#magicTrail');
+const trailCtx = trailCanvas.getContext('2d');
+let trailPoints = [], sparkles = [];
+function resizeTrail(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  trailCanvas.width = Math.round(innerWidth * dpr);
+  trailCanvas.height = Math.round(innerHeight * dpr);
+  trailCanvas.style.width = innerWidth + 'px';
+  trailCanvas.style.height = innerHeight + 'px';
+  trailCtx.setTransform(dpr,0,0,dpr,0,0);
+}
+resizeTrail(); window.addEventListener('resize', resizeTrail);
+function addTrailPoint(x,y){
+  if (!document.querySelector('#home').classList.contains('visible')) return;
+  trailPoints.push({x,y,life:1});
+  if (trailPoints.length > 22) trailPoints.shift();
+  for(let i=0;i<2;i++) sparkles.push({x:x+(Math.random()-.5)*7,y:y+(Math.random()-.5)*7,vx:(Math.random()-.5)*.7,vy:-Math.random()*1.1-.15,r:Math.random()*1.4+.45,life:.8+Math.random()*.2});
+}
+homePage.addEventListener('pointerdown', e => { if(e.pointerType==='mouse' && e.button!==0) return; addTrailPoint(e.clientX,e.clientY); });
+homePage.addEventListener('pointermove', e => { if(e.pointerType==='mouse' && e.buttons===0) return; addTrailPoint(e.clientX,e.clientY); });
+function drawMagicTrail(){
+  trailCtx.clearRect(0,0,innerWidth,innerHeight);
+  if(document.querySelector('#home').classList.contains('visible')){
+    for(let i=trailPoints.length-1;i>=0;i--){trailPoints[i].life-=.045;if(trailPoints[i].life<=0)trailPoints.splice(i,1);}
+    if(trailPoints.length>1){
+      for(let i=1;i<trailPoints.length;i++){
+        const a=trailPoints[i-1],b=trailPoints[i],alpha=Math.min(a.life,b.life)*(i/trailPoints.length);
+        trailCtx.beginPath();trailCtx.moveTo(a.x,a.y);trailCtx.lineTo(b.x,b.y);
+        trailCtx.lineCap='round';trailCtx.lineJoin='round';trailCtx.lineWidth=1.4+alpha*.7;
+        trailCtx.strokeStyle=`rgba(75,180,255,${alpha*.78})`;trailCtx.shadowColor='#3caaff';trailCtx.shadowBlur=7;trailCtx.stroke();
+        trailCtx.shadowBlur=0;
+      }
+    }
+    for(let i=sparkles.length-1;i>=0;i--){const p=sparkles[i];p.x+=p.vx;p.y+=p.vy;p.life-=.025;if(p.life<=0){sparkles.splice(i,1);continue;}trailCtx.beginPath();trailCtx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);trailCtx.fillStyle=`rgba(145,220,255,${p.life*.85})`;trailCtx.shadowColor='#4db8ff';trailCtx.shadowBlur=6;trailCtx.fill();trailCtx.shadowBlur=0;}
+  } else {trailPoints=[];sparkles=[];}
+  requestAnimationFrame(drawMagicTrail);
+}
+drawMagicTrail();
+/* Shine cards as they enter the viewport while the user scrolls. */
+const shineObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const card = entry.target;
+      card.classList.remove('scroll-shine');
+      void card.offsetWidth;
+      card.classList.add('scroll-shine');
+      window.setTimeout(() => card.classList.remove('scroll-shine'), 1000);
+    }
+  });
+}, {threshold: 0.45});
+document.querySelectorAll('.play-card').forEach(card => shineObserver.observe(card));
+/* 3-second loading screen, then switch directly to Home. */
+const splashScreen = document.querySelector('.splash');
+setTimeout(()=>{
+  splashScreen.style.display='none';
+  document.querySelector('#home').classList.add('visible');
+},3000);
+
+/* LUFAN playable prototype navigation */
+const screens=[...document.querySelectorAll('.screen')];
+const ANTI_CLOCKWISE_ORDER=[1,3,2,0];
+let selectedColorIds=[0,1,2,3];
+function nextAntiClockwisePlayer(player){const active=activePlayerIds();const i=active.indexOf(player);return active[(i+1)%active.length];}
+function activePlayerIds(){return ANTI_CLOCKWISE_ORDER.filter(id=>selectedColorIds.includes(id));}
+function setDefaultColors(count){selectedColorIds=count===2?[1,2]:count===3?[1,2,0]:[0,1,2,3];document.querySelectorAll('[data-color-player]').forEach(b=>b.classList.toggle('selected',selectedColorIds.includes(Number(b.dataset.colorPlayer))));}
+let selectedMode='local', playerCount=4, boardTheme='classic', currentPlayer=1, diceValue=0, gameStarted=false, diceRolling=false, consecutiveSixes=0;
+function showScreen(id){document.querySelector('.splash').style.display='none';document.querySelector('#home').classList.remove('visible');screens.forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function showHome(){screens.forEach(s=>s.classList.remove('active'));document.querySelector('#home').classList.add('visible');window.scrollTo(0,0);}
+function shouldAskBeforeLeaving(){
+ const activeScreen=document.querySelector('.screen.active');
+ const createRoomOpen=document.getElementById('createRoomModal')?.classList.contains('open');
+ const joinRoomOpen=document.getElementById('joinRoomModal')?.classList.contains('open');
+ return !!createRoomOpen || !!joinRoomOpen || !!(activeScreen && (activeScreen.id==='roomScreen' || activeScreen.id==='gameScreen'));
+}
+function confirmGoBack(){
+ if(shouldAskBeforeLeaving()){
+  const dialog=document.getElementById('leaveGameDialog');
+  if(dialog) dialog.classList.add('open');
+ }else{
+  // Outside Create Room/Room Lobby and an active match, Back should not show the alert.
+  const createRoom=document.getElementById('createRoomModal');
+  if(createRoom?.classList.contains('open')) createRoom.classList.remove('open');
+  else showHome();
+ }
+}
+function closeLeaveGameDialog(){const dialog=document.getElementById('leaveGameDialog');if(dialog)dialog.classList.remove('open');}
+function leaveCurrentGame(){closeLeaveGameDialog();document.getElementById('createRoomModal')?.classList.remove('open');showHome();}
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',confirmGoBack));
+// Android/browser Back asks for confirmation only in Create Room, Room Lobby, or during a match.
+function armBackGuard(){history.pushState({lufanGuard:true},'','#lufan-game');}
+armBackGuard();
+window.addEventListener('popstate',()=>{
+ const profileOverlay=document.getElementById('lufanProfileOverlay');
+ const infoModal=document.getElementById('lufanInfoModal');
+ if(profileOverlay&&profileOverlay.classList.contains('open')){document.getElementById('lpfClose')?.click();}
+ else if(infoModal&&getComputedStyle(infoModal).display!=='none'){document.getElementById('lufanInfoClose')?.click();}
+ else if(shouldAskBeforeLeaving()){confirmGoBack();}
+ else {document.getElementById('createRoomModal')?.classList.remove('open');showHome();}
+ armBackGuard();
+});
+document.querySelectorAll('[data-play]').forEach(card=>card.addEventListener('click',()=>{
+ const mode=card.dataset.play;
+ if(mode==='Create Room'){openCreateRoom();return;}
+ if(mode==='Join Room'){openJoinRoom();return;}
+ document.getElementById('setupHeading').textContent=mode;
+ selectedMode='local';
+ document.querySelectorAll('[data-opponent]').forEach(b=>b.classList.toggle('selected',b.dataset.opponent===selectedMode));
+ showScreen('setupScreen');
+}));
+document.querySelectorAll('[data-opponent]').forEach(b=>b.addEventListener('click',()=>{selectedMode=b.dataset.opponent;document.querySelectorAll('[data-opponent]').forEach(x=>x.classList.toggle('selected',x===b));}));
+document.querySelectorAll('[data-players]').forEach(b=>b.addEventListener('click',()=>{playerCount=Number(b.dataset.players);document.querySelectorAll('[data-players]').forEach(x=>x.classList.toggle('selected',x===b));setDefaultColors(playerCount);}));
+document.querySelectorAll('[data-color-player]').forEach(b=>b.addEventListener('click',()=>{const id=Number(b.dataset.colorPlayer);if(selectedColorIds.includes(id)){if(selectedColorIds.length<=1)return;selectedColorIds=selectedColorIds.filter(x=>x!==id);}else{if(selectedColorIds.length>=playerCount){updateGameText('Select exactly '+playerCount+' token colours for this match.');return;}selectedColorIds.push(id);}document.querySelectorAll('[data-color-player]').forEach(x=>x.classList.toggle('selected',selectedColorIds.includes(Number(x.dataset.colorPlayer))));}));
+document.querySelectorAll('[data-theme]').forEach(b=>b.addEventListener('click',()=>{boardTheme=b.dataset.theme;document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('selected',x===b));}));
+document.getElementById('startGame').addEventListener('click',()=>{if(selectedColorIds.length!==playerCount){alert('Please select exactly '+playerCount+' token colours.');return;}currentPlayer=activePlayerIds().includes(1)?1:activePlayerIds()[0];diceValue=0;consecutiveSixes=0;waitingForMove=false;computerBusy=false;movingToken=false;tokenSelection=null;tokenProgress=Array.from({length:4},()=>[-1,-1,-1,-1]);gameStarted=true;setDie(1,false);drawBoard();updateGameText('Blue starts! Turns move anticlockwise. Roll a 6 to bring a token out of the yard.');showScreen('gameScreen');});
+function svgEl(tag,attrs={},textContent=''){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(textContent)e.textContent=textContent;return e;}
+const BOARD_COLORS = ['#e53945','#168bdb','#17a65a','#f3c928'];
+const BOARD_DARK = ['#a91926','#075b9c','#08713a','#b08a00'];
+const PLAYER_NAMES = ['Red','Blue','Green','Yellow'];
+const START_INDEX = [0,39,13,26];
+const SAFE_INDICES = new Set([0,8,13,21,26,34,39,47]);
+const TRACK = [
+ [6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],
+ [1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
+ [7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],
+ [14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],
+ [7,0],[6,0]
+];
+const HOME_LANES = [
+ [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
+ [[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]],
+ [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
+ [[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]]
+];
+const YARD_CENTERS = [
+ [[1.5,1.5],[1.5,3.5],[3.5,1.5],[3.5,3.5]],       // Red: top-left, evenly inset
+ [[10.5,1.5],[10.5,3.5],[12.5,1.5],[12.5,3.5]],   // Blue: bottom-left, evenly inset
+ [[1.5,10.5],[1.5,12.5],[3.5,10.5],[3.5,12.5]],   // Green: top-right, evenly inset
+ [[10.5,10.5],[10.5,12.5],[12.5,10.5],[12.5,12.5]] // Yellow: bottom-right, evenly inset
+];
+// Per-token progress: -1 = yard, 0..56 = track/home lane, 57 = finished.
+let tokenProgress = Array.from({length:4},()=>[-1,-1,-1,-1]);
+setDefaultColors(playerCount);
+let tokenSelection=null, waitingForMove=false, computerBusy=false, movingToken=false;
+function svgEl(tag,attrs={},textContent=''){
+ const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+ Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+ if(textContent)e.textContent=textContent;
+ return e;
+}
+function cellRect(svg,row,col,fill,stroke='#8b8b8b',sw=1){svg.append(svgEl('rect',{x:col*40,y:row*40,width:40,height:40,fill,stroke,'stroke-width':sw}));}
+function tokenCoord(player,token){
+ const prog=tokenProgress[player][token];
+ if(prog===-1){const [r,c]=YARD_CENTERS[player][token];return {x:c*40+20,y:r*40+20,home:true};}
+ if(prog>=57)return {x:300+(player%2?10:-10),y:300+(player<2?-10:10),finished:true};
+ if(prog>=52){const [r,c]=HOME_LANES[player][prog-52];return {x:c*40+20,y:r*40+20,lane:true};}
+ const [r,c]=TRACK[(START_INDEX[player]+prog)%52];return {x:c*40+20,y:r*40+20};
+}
+function drawBoard(){
+ ['topDiceRedSlot','moveToken','rollDice','restartGame'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.visibility=activePlayerIds().includes(Number(el.dataset.player))?'visible':'hidden';});
+ const svg=document.getElementById('ludoBoard');svg.replaceChildren();
+ const theme=boardTheme==='midnight'?{bg:'#111827',grid:'#dce5f5',homes:['#a42c47','#176d9c','#147c55','#9d7a17'],lane:['#7d1b2e','#0a4f7d','#075b39','#795d08']}:{bg:'#fff',grid:'#a8a8a8',homes:BOARD_COLORS,lane:['#df263f','#0879bf','#078d50','#d9ad08']};
+ svg.append(svgEl('defs',{},''));
+ const defs=svg.querySelector('defs');const grad=svgEl('linearGradient',{id:'pinSilver',x1:'0%',y1:'0%',x2:'100%',y2:'100%'});grad.append(svgEl('stop',{offset:'0%','stop-color':'#ffffff'}));grad.append(svgEl('stop',{offset:'45%','stop-color':'#d7dce4'}));grad.append(svgEl('stop',{offset:'100%','stop-color':'#8c95a4'}));defs.append(grad);
+ svg.append(svgEl('rect',{x:0,y:0,width:600,height:600,fill:theme.bg}));
+ const homeDefs=[{r:0,c:0,p:0},{r:0,c:9,p:2},{r:9,c:0,p:1},{r:9,c:9,p:3}];
+ homeDefs.forEach(({r,c,p})=>{
+  const color=theme.homes[p],dark=BOARD_DARK[p];
+  svg.append(svgEl('rect',{x:c*40,y:r*40,width:240,height:240,fill:color,stroke:dark,'stroke-width':2}));
+  svg.append(svgEl('rect',{x:c*40+30,y:r*40+30,width:180,height:180,rx:9,fill:theme.bg,stroke:'#ffffff','stroke-width':2}));
+  // Show the room member's chosen name in their matching home base.
+  const roomMember=Array.isArray(roomMembers)?roomMembers.find(m=>Number(m.color)===p):null;
+  const homeName=(roomMember&&String(roomMember.name||'').trim())||PLAYER_NAMES[p];
+  if(p===1||p===2){
+   svg.append(svgEl('text',{x:c*40+120,y:r*40+20,'text-anchor':'middle','dominant-baseline':'middle','font-size':13,'font-weight':900,fill:'#fff','paint-order':'stroke','stroke':dark,'stroke-width':2,'stroke-linejoin':'round','textLength':Math.min(205,Math.max(40,homeName.length*7)),'lengthAdjust':'spacingAndGlyphs'},homeName));
+  }
+  for(let t=0;t<4;t++){const [rr,cc]=YARD_CENTERS[p][t];svg.append(svgEl('circle',{cx:cc*40+20,cy:rr*40+20,r:15,fill:color,stroke:'#fff','stroke-width':2,opacity:.42}));}
+ });
+ TRACK.forEach(([r,c],idx)=>{
+  const owner=START_INDEX.indexOf(idx);cellRect(svg,r,c,owner>=0?theme.homes[owner]:theme.bg,theme.grid,1.2);
+  if(SAFE_INDICES.has(idx))svg.append(svgEl('text',{x:c*40+20,y:r*40+22,'text-anchor':'middle','dominant-baseline':'middle','font-size':23,'font-weight':900,fill:owner>=0?'#fff':'#e0a51b'},'★'));
+ });
+ HOME_LANES.forEach((lane,p)=>lane.forEach(([r,c],i)=>cellRect(svg,r,c,i===5?theme.homes[p]:theme.lane[p],theme.grid,1.2)));
+ svg.append(svgEl('path',{d:'M240 240 L360 240 L300 300 Z',fill:theme.homes[2],stroke:'#fff','stroke-width':1}));
+ svg.append(svgEl('path',{d:'M360 240 L360 360 L300 300 Z',fill:theme.homes[3],stroke:'#fff','stroke-width':1}));
+ svg.append(svgEl('path',{d:'M360 360 L240 360 L300 300 Z',fill:theme.homes[1],stroke:'#fff','stroke-width':1}));
+ svg.append(svgEl('path',{d:'M240 360 L240 240 L300 300 Z',fill:theme.homes[0],stroke:'#fff','stroke-width':1}));
+ svg.append(svgEl('circle',{cx:300,cy:300,r:10,fill:'#fff',stroke:'#444','stroke-width':1}));
+ const tokenItems=[];
+ for(const p of activePlayerIds())for(let t=0;t<4;t++) tokenItems.push({p,t,pos:tokenCoord(p,t)});
+ // Group tokens sharing a track/home point so every token remains visible.
+ const tokenGroups=new Map();
+ tokenItems.forEach(item=>{if(item.pos.home||item.pos.finished)return;const key=`${Math.round(item.pos.x)},${Math.round(item.pos.y)}`;if(!tokenGroups.has(key))tokenGroups.set(key,[]);tokenGroups.get(key).push(item);});
+ for(const item of tokenItems){
+  const {p,t,pos}=item,selected=tokenSelection&&tokenSelection.player===p&&tokenSelection.token===t;
+  const key=`${Math.round(pos.x)},${Math.round(pos.y)}`,group=(!pos.home&&!pos.finished)?(tokenGroups.get(key)||[]):[];
+  const count=group.length,slot=count>1?group.findIndex(v=>v.p===p&&v.t===t):0;
+  const spread=count>1?(slot-(count-1)/2)*13:0;
+  const scale=count>1?(count>=3?0.67:0.76):1;
+  const g=svgEl('g',{class:'board-token',tabindex:0,role:'button','aria-label':`${PLAYER_NAMES[p]} token ${t+1}`,style:'cursor:pointer',transform:`translate(${spread} 0) translate(${pos.x} ${pos.y}) scale(${scale}) translate(${-pos.x} ${-pos.y})`});
+  if(selected)g.append(svgEl('circle',{cx:pos.x,cy:pos.y,r:17,fill:'none',stroke:'#ffe76b','stroke-width':4}));
+  g.append(svgEl('ellipse',{cx:pos.x,cy:pos.y+5,rx:12,ry:4,fill:'#000','opacity':.22}));
+  const base=svgEl('g',{class:'token-base'+(diceValue===6&&p===currentPlayer?' spin':'')});
+  base.append(svgEl('circle',{cx:pos.x,cy:pos.y,r:13.5,fill:'#f5f5f5',stroke:'#313844','stroke-width':2.2}));
+  base.append(svgEl('circle',{cx:pos.x,cy:pos.y,r:10.5,fill:'#9d1f2b',stroke:'#d8dce4','stroke-width':2}));
+  base.append(svgEl('circle',{cx:pos.x,cy:pos.y,r:7.5,fill:BOARD_COLORS[p],stroke:'#fff','stroke-width':1.2}));
+  g.append(base);
+  // Glossy 3D location-pin shaped token, matching the supplied reference.
+  const pin=svgEl('g',{class:'token-pin',transform:'translate(0 -16)'});
+  pin.append(svgEl('path',{d:`M ${pos.x} ${pos.y-23} C ${pos.x-13} ${pos.y-25} ${pos.x-16} ${pos.y-15} ${pos.x-14} ${pos.y-4} C ${pos.x-11} ${pos.y+4} ${pos.x-4} ${pos.y+11} ${pos.x} ${pos.y+16} C ${pos.x+4} ${pos.y+11} ${pos.x+11} ${pos.y+4} ${pos.x+14} ${pos.y-4} C ${pos.x+16} ${pos.y-15} ${pos.x+13} ${pos.y-25} ${pos.x} ${pos.y-25} Z`,fill:'url(#pinSilver)',stroke:'#606875','stroke-width':1.6}));
+  pin.append(svgEl('circle',{cx:pos.x,cy:pos.y-12,r:8.4,fill:BOARD_COLORS[p],stroke:'#29313b','stroke-width':1.8}));
+  pin.append(svgEl('circle',{cx:pos.x-3,cy:pos.y-15,r:2.4,fill:'#fff','opacity':.7}));
+  g.append(pin);
+  if(pos.finished)g.append(svgEl('text',{x:pos.x,y:pos.y+4,'text-anchor':'middle','font-size':15,fill:'#fff','font-weight':900},'✓'));
+  if(waitingForMove&&p===currentPlayer&&isLegalToken(p,t))g.setAttribute('filter','drop-shadow(0 0 4px #ffe76b)');
+  g.addEventListener('click',()=>handleTokenTap(p,t));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleTokenTap(p,t);}});svg.append(g);
+ }
+ svg.append(svgEl('rect',{x:1,y:1,width:598,height:598,fill:'none',stroke:'#5e6b80','stroke-width':2}));
+}
+function isLegalToken(player,token){const prog=tokenProgress[player][token];if(prog===57)return false;if(prog===-1)return diceValue===6;return prog+diceValue<=57;}
+function updateGameText(msg){
+ setDie(diceValue||1,false);
+ const pill=document.getElementById('turnPill');pill.textContent='● '+PLAYER_NAMES[currentPlayer]+"'s turn";pill.style.color=BOARD_COLORS[currentPlayer];
+ document.getElementById('diceHint').textContent=diceValue?'Rolled '+diceValue:'Tap to roll';
+ document.getElementById('moveHint').textContent=waitingForMove?'Tap a glowing token':(tokenProgress[currentPlayer].includes(-1)?'Roll a 6 to start':'Choose a token after rolling');
+ document.getElementById('gameLog').textContent=msg;document.getElementById('diceFace').setAttribute('aria-label',diceValue?`Dice shows ${diceValue}`:'Roll dice');
+}
+function dieFace(value, faceClass){
+ const patterns={
+  1:[4],2:[1,7],3:[1,4,7],4:[1,2,6,7],5:[1,2,4,6,7],6:[1,2,3,5,6,7]
+ };
+ return `<span class="die-face ${faceClass}">${Array.from({length:9},(_,i)=>`<i class="${patterns[value].includes(i+1)?'pip-dot':''}"></i>`).join('')}</span>`;
+}
+function setDie(value,animate=true){
+ const playerColors=['die-red','die-blue','die-green','die-yellow'];
+ // Corner order follows the board: red top-left, green top-right, blue bottom-left, yellow bottom-right.
+ const slots=[document.getElementById('topDiceRed'),document.getElementById('diceFace'),document.getElementById('bottomDiceBlue'),document.getElementById('bottomDiceYellow')];
+ slots.forEach((el,index)=>{
+  if(!el)return;
+  el.classList.remove('die-red','die-blue','die-green','die-yellow','rolling');
+  const activePlayerForSlot=[0,2,1,3][index];
+  const faceValue=Math.max(1,Math.min(6,Number(value)||1));
+  if(activePlayerForSlot===currentPlayer){
+   el.innerHTML=`<span class="die-cube face-${faceValue}">${dieFace(faceValue,'front')}${dieFace(2,'back')}${dieFace(3,'right')}${dieFace(4,'left')}${dieFace(5,'top')}${dieFace(6,'bottom')}</span>`;
+   el.classList.add(playerColors[activePlayerForSlot]);
+  }else el.innerHTML='';
+ });
+ const active=slots[[0,2,1,3].indexOf(currentPlayer)];
+ if(active&&animate){void active.offsetWidth;active.classList.add('rolling');}
+}
+let lufanAudio=null, rollSoundTimer=null;
+function audioContext(){
+ try{if(!lufanAudio){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;lufanAudio=new AC();}if(lufanAudio.state==='suspended')lufanAudio.resume().catch(()=>{});return lufanAudio;}catch(e){return null;}
+}
+function playTone(ctx,frequency,start,duration,type='sine',gainValue=.04,endFrequency=null){
+ const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(frequency,start);if(endFrequency)osc.frequency.exponentialRampToValueAtTime(Math.max(1,endFrequency),start+duration);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(Math.min(0.95,gainValue*4.6),start+.012);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.02);
+}
+function startDiceSound(){
+ const ctx=audioContext();if(!ctx)return;stopDiceSound();const end=ctx.currentTime+0.7;let n=0;
+ // Soft rolling clacks speed up and settle as the cube slows down.
+ const tick=()=>{if(!diceRolling)return;const c=audioContext();if(!c)return;const now=c.currentTime;const progress=Math.min(1,n/14);playTone(c,520+Math.random()*260,now,.045,'triangle',.065,180+Math.random()*90);n++;if(now<end){rollSoundTimer=window.setTimeout(tick,Math.round(95+progress*95));}};
+ playTone(ctx,260,ctx.currentTime,.45,'sine',.075,520);tick();
+}
+function stopDiceSound(){if(rollSoundTimer){clearTimeout(rollSoundTimer);rollSoundTimer=null;}}
+function playMoveSound(){
+ const ctx=audioContext();if(!ctx)return;const now=ctx.currentTime;
+ // A light wooden/plastic click on each square, with a tiny pitch variation.
+ playTone(ctx,390+Math.random()*110,now,.075,'triangle',.12,250);
+}
+function playTokenExitSound(){
+ const ctx=audioContext();if(!ctx)return;const now=ctx.currentTime;
+ // Bright little pop when a token leaves its yard.
+ playTone(ctx,420,now,.10,'sine',.14,720);playTone(ctx,680,now+.055,.13,'triangle',.10,520);
+}
+function playWinSound(){
+ const ctx=audioContext();if(!ctx)return;const now=ctx.currentTime;
+ // Short celebratory fanfare.
+ playTone(ctx,523.25,now,.22,'triangle',.14,523.25);
+ playTone(ctx,659.25,now+.16,.22,'triangle',.14,659.25);
+ playTone(ctx,783.99,now+.32,.24,'triangle',.15,783.99);
+ playTone(ctx,1046.5,now+.50,.48,'sine',.17,1046.5);
+}
+function playStarSound(){
+ const ctx=audioContext();if(!ctx)return;const now=ctx.currentTime;
+ // Bright, short two-note sparkle when a token lands on a star square.
+ playTone(ctx,880,now,.14,'sine',.22,1320);
+ playTone(ctx,1174.66,now+.09,.22,'triangle',.20,1568);
+ playTone(ctx,1568,now+.20,.25,'sine',.16,1760);
+}
+function playFunnyCry(){
+ const ctx=audioContext();if(!ctx)return;const now=ctx.currentTime;
+ // A short, playful cartoon-style descending whimper, synthesized locally.
+ playTone(ctx,660,now,.22,'sawtooth',.10,520);playTone(ctx,520,now+.19,.27,'sawtooth',.10,390);playTone(ctx,420,now+.43,.42,'triangle',.11,210);playTone(ctx,300,now+.82,.28,'sine',.07,230);
+}
+function rollDice(){
+ if(!gameStarted||computerBusy||diceRolling||movingToken)return;
+ if(diceValue){updateGameText('Move one of the highlighted tokens first.');return;}
+ // Keep the result hidden until the full, smooth 700ms 3D roll finishes.
+ diceRolling=true;
+ startDiceSound();
+ const result=Math.floor(Math.random()*6)+1;
+ setDie(1,true);
+ document.getElementById('diceHint').textContent='Rolling…';
+ document.getElementById('moveHint').textContent='Dice is rolling — please wait';
+ document.getElementById('gameLog').textContent=`${PLAYER_NAMES[currentPlayer]} is rolling the dice…`;
+ window.setTimeout(()=>{
+  diceRolling=false;stopDiceSound();diceValue=result;setDie(diceValue,false);
+  if(diceValue===6) consecutiveSixes++; else consecutiveSixes=0;
+  if(consecutiveSixes>=3){
+   consecutiveSixes=0; diceValue=0; waitingForMove=false; drawBoard();
+   updateGameText(`${PLAYER_NAMES[currentPlayer]} rolled three 6s in a row — turn forfeited!`);
+   window.setTimeout(()=>finishTurn(false),900); return;
+  }
+  const legal=Array.from({length:4},(_,t)=>t).filter(t=>isLegalToken(currentPlayer,t));
+  if(!legal.length){updateGameText(`${PLAYER_NAMES[currentPlayer]} rolled ${diceValue}; no legal move. Turn passes.`);drawBoard();window.setTimeout(()=>finishTurn(false),700);return;}
+  waitingForMove=true;tokenSelection=null;drawBoard();updateGameText(`${PLAYER_NAMES[currentPlayer]} rolled ${diceValue}. Tap a glowing token to move.`);
+ },700);
+}
+async function handleTokenTap(player,token){
+ if(!gameStarted||computerBusy||diceRolling||movingToken||!waitingForMove||player!==currentPlayer)return;
+ if(!isLegalToken(player,token)){updateGameText('Choose a highlighted token that can legally move.');return;}
+ tokenSelection={player,token};
+ const old=tokenProgress[player][token];
+ const steps=(old===-1)?[0]:Array.from({length:diceValue},(_,i)=>old+i+1);
+ if(old===-1)playTokenExitSound();
+ waitingForMove=false;
+ movingToken=true;
+ document.getElementById('moveHint').textContent='Moving…';
+ // Animate one square at a time so the token visibly touches each cell.
+ for(const step of steps){
+  tokenProgress[player][token]=step;
+  if(old!==-1)playMoveSound();
+  drawBoard();
+  await new Promise(resolve=>window.setTimeout(resolve,165));
+ }
+ const newProgress=tokenProgress[player][token];
+ let captured=false;
+ if(newProgress>=0&&newProgress<52){
+  const globalIndex=(START_INDEX[player]+newProgress)%52;
+  if(SAFE_INDICES.has(globalIndex))playStarSound();
+  if(!SAFE_INDICES.has(globalIndex)){
+   const [r,c]=TRACK[globalIndex];
+   for(const other of activePlayerIds())if(other!==player)for(let t=0;t<4;t++){
+    const op=tokenProgress[other][t];
+    if(op>=0&&op<52){
+     const [orow,ocol]=TRACK[(START_INDEX[other]+op)%52];
+     if(orow===r&&ocol===c){tokenProgress[other][t]=-1;captured=true;}
+    }
+   }
+  }
+ }
+ movingToken=false;
+ if(captured)playFunnyCry();
+ const won=tokenProgress[player].every(v=>v===57);
+ drawBoard();
+ if(won){playWinSound();gameStarted=false;updateGameText(`🎉 ${PLAYER_NAMES[player]} wins the game!`);document.getElementById('moveHint').textContent='Winner!';return;}
+ const tokenReachedHome=newProgress===57;
+ const extra=diceValue===6||captured||tokenReachedHome;
+ finishTurn(extra,captured?`${PLAYER_NAMES[player]} captured a token! 😭 `:(tokenReachedHome?`${PLAYER_NAMES[player]} brought a token home! 🏁 `:''));
+}
+function finishTurn(extra=false,prefix=''){
+ waitingForMove=false;tokenSelection=null;diceValue=0;if(!extra)currentPlayer=nextAntiClockwisePlayer(currentPlayer);drawBoard();
+ if(selectedMode==='computer'&&currentPlayer!==0&&gameStarted){
+  updateGameText(prefix+`${PLAYER_NAMES[currentPlayer]} is thinking…`);computerBusy=true;
+  window.setTimeout(()=>{computerBusy=false;diceValue=Math.floor(Math.random()*6)+1;setDie(diceValue,true);
+   const legal=Array.from({length:4},(_,t)=>t).filter(t=>isLegalToken(currentPlayer,t));
+   if(legal.length){let chosen=legal.find(t=>tokenProgress[currentPlayer][t]===-1);if(chosen===undefined)chosen=legal.reduce((best,t)=>tokenProgress[currentPlayer][t]>tokenProgress[currentPlayer][best]?t:best,legal[0]);waitingForMove=true;handleTokenTap(currentPlayer,chosen);}
+   else{updateGameText(`${PLAYER_NAMES[currentPlayer]} rolled ${diceValue}; no move. Your turn is next.`);window.setTimeout(()=>{diceValue=0;currentPlayer=1;drawBoard();updateGameText("Blue's turn. Roll the dice.");},650);}
+  },600);
+ }else updateGameText(prefix+(extra?'Roll again! ':'')+`${PLAYER_NAMES[currentPlayer]}'s turn. Roll the dice.`);
+}
+setDie(5,false);
+// All four dice boxes roll only for their owner. Capture the click first because
+// the original layout reused the blue/yellow dice buttons for other controls.
+['topDiceRedSlot','rollDice','moveToken','restartGame'].forEach(id=>{
+ const slot=document.getElementById(id);
+ if(!slot)return;
+ slot.addEventListener('click',event=>{
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const owner=Number(slot.dataset.player);
+  if(!activePlayerIds().includes(owner)){
+   if(gameStarted) updateGameText('Only selected player colours can roll the dice.');
+   return;
+  }
+  if(owner!==currentPlayer){
+   if(gameStarted) updateGameText(`${PLAYER_NAMES[currentPlayer]}'s turn — tap your own ${PLAYER_NAMES[currentPlayer].toLowerCase()} dice box.`);
+   return;
+  }
+  rollDice();
+ },true);
+});
+
+
+let roomPlayerLimit=2, roomColors=[1,2], roomMembers=[];
+const roomColorNames=['Red','Blue','Green','Yellow'], roomColorEmoji=['🔴','🔵','🟢','🟡'];
+function updateRoomColorButtons(){document.querySelectorAll('[data-room-color]').forEach(b=>b.classList.toggle('selected',roomColors.includes(Number(b.dataset.roomColor))));document.getElementById('roomCreateHint').textContent='Select exactly '+roomPlayerLimit+' colour'+(roomPlayerLimit===1?'':'s')+'. Selected: '+roomColors.map(i=>roomColorNames[i]).join(' + ');document.getElementById('confirmCreateRoom').disabled=roomColors.length!==roomPlayerLimit;}
+function openCreateRoom(){roomPlayerLimit=2;roomColors=[1,2];document.getElementById('roomPlayerCountSelect').value='2';updateRoomColorButtons();document.getElementById('createRoomModal').classList.add('open');}
+document.getElementById('roomPlayerCountSelect').addEventListener('change',e=>{roomPlayerLimit=Number(e.target.value);roomColors=([1,2,0,3]).slice(0,roomPlayerLimit);updateRoomColorButtons();});
+document.querySelectorAll('[data-room-color]').forEach(b=>b.addEventListener('click',()=>{const id=Number(b.dataset.roomColor);if(roomColors.includes(id))roomColors=roomColors.filter(x=>x!==id);else if(roomColors.length<roomPlayerLimit)roomColors.push(id);updateRoomColorButtons();}));
+document.getElementById('cancelCreateRoom').addEventListener('click',()=>document.getElementById('createRoomModal').classList.remove('open'));
+document.getElementById('confirmCreateRoom').addEventListener('click',()=>{if(roomColors.length!==roomPlayerLimit)return;playerCount=roomPlayerLimit;selectedColorIds=[...roomColors];document.querySelectorAll('[data-players]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.players)===playerCount));document.querySelectorAll('[data-color-player]').forEach(b=>b.classList.toggle('selected',selectedColorIds.includes(Number(b.dataset.colorPlayer))));const code='LF-'+Math.random().toString(36).slice(2,6).toUpperCase();document.getElementById('roomCode').textContent=code;const profile=(()=>{try{return JSON.parse(localStorage.getItem('lufanPlayerProfile')||'{}')}catch(e){return {}}})();roomMembers=[{name:profile.name||'Host',color:roomColors[0],host:true}];document.getElementById('roomPlayerCountSelect').value=String(roomPlayerLimit);document.getElementById('roomPlayerSetting').textContent=roomPlayerLimit+' Players';document.getElementById('roomColorSetting').textContent=roomColors.map(i=>roomColorNames[i]).join(' + ');document.getElementById('roomStatus').textContent='Waiting for players';document.getElementById('copyCode').textContent='COPY ROOM CODE';document.getElementById('createRoomModal').classList.remove('open');try{localStorage.setItem('lufanActiveRoom',JSON.stringify({code,limit:roomPlayerLimit,colors:roomColors,members:roomMembers,updatedAt:Date.now()}));}catch(e){}renderRoomRoster();showScreen('roomScreen');});
+function renderRoomRoster(){const roster=document.getElementById('roomRoster');roster.innerHTML='';roomMembers.forEach(m=>{const row=document.createElement('div');row.className='room-player';const dot=document.createElement('div');dot.className='room-player-dot';dot.textContent=roomColorEmoji[m.color];const info=document.createElement('div');const name=document.createElement('div');name.className='room-player-name';name.textContent=m.name;const meta=document.createElement('div');meta.className='room-player-meta';meta.textContent=roomColorNames[m.color]+' tokens'+(m.host?' · Room host':'');info.append(name,meta);const status=document.createElement('div');status.className='room-player-status';status.textContent=m.host?'HOST':'JOINED';row.append(dot,info,status);roster.append(row);});document.getElementById('roomPlayerCount').textContent=roomMembers.length+'/'+roomPlayerLimit;document.getElementById('hostGame').disabled=roomMembers.length<roomPlayerLimit;document.getElementById('roomStatus').textContent=roomMembers.length>=roomPlayerLimit?'Ready to start':'Waiting for players';try{const saved=JSON.parse(localStorage.getItem('lufanActiveRoom')||'null');if(saved&&saved.code===document.getElementById('roomCode').textContent){saved.limit=roomPlayerLimit;saved.colors=roomColors;saved.members=roomMembers; saved.updatedAt=Date.now();localStorage.setItem('lufanActiveRoom',JSON.stringify(saved));}}catch(e){}}
+
+
+function readSavedRoom(){try{return JSON.parse(localStorage.getItem('lufanActiveRoom')||'null')}catch(e){return null}}
+function roomCodeMatches(code){const saved=readSavedRoom();return !!code && !!saved && String(saved.code||'').toUpperCase()===code.trim().toUpperCase()}
+function updateJoinCodeState(){const input=document.getElementById('joinModalRoomCode'),hint=document.getElementById('joinCodeHint'),btn=document.getElementById('confirmJoinRoom'),code=input.value.trim().toUpperCase(),valid=roomCodeMatches(code);input.classList.toggle('code-valid',valid);input.classList.toggle('code-invalid',code.length>0&&!valid);hint.classList.toggle('code-valid-text',valid);hint.classList.toggle('code-invalid-text',code.length>0&&!valid);hint.textContent=valid?'✓ Room code is correct. You can join this room.':code?'Room code not found. Check the code and try again.':'Room code will be checked as you type.';btn.disabled=!valid;}
+function openJoinRoom(){document.getElementById('joinModalPlayerName').value='';document.getElementById('joinModalRoomCode').value='';updateJoinCodeState();document.getElementById('joinRoomModal').classList.add('open');}
+document.getElementById('joinModalRoomCode').addEventListener('input',updateJoinCodeState);
+document.getElementById('cancelJoinRoom').addEventListener('click',()=>document.getElementById('joinRoomModal').classList.remove('open'));
+document.getElementById('confirmJoinRoom').addEventListener('click',()=>{const name=document.getElementById('joinModalPlayerName').value.trim(),code=document.getElementById('joinModalRoomCode').value.trim().toUpperCase();if(!name){document.getElementById('joinCodeHint').textContent='Please enter your player name.';document.getElementById('joinModalPlayerName').focus();return;}if(!roomCodeMatches(code)){updateJoinCodeState();return;}const saved=readSavedRoom();if(!saved)return;const sameRoom=document.getElementById('roomCode').textContent===saved.code&&roomMembers.length>0;if(!sameRoom){roomPlayerLimit=Number(saved.limit)||2;roomColors=Array.isArray(saved.colors)?saved.colors:[1,2];roomMembers=Array.isArray(saved.members)?saved.members:[];document.getElementById('roomCode').textContent=saved.code;document.getElementById('roomPlayerSetting').textContent=roomPlayerLimit+' Players';document.getElementById('roomColorSetting').textContent=roomColors.map(i=>roomColorNames[i]).join(' + ');document.getElementById('copyCode').textContent='COPY ROOM CODE';}if(roomMembers.some(m=>String(m.name).toLowerCase()===name.toLowerCase())){document.getElementById('joinCodeHint').textContent='That name is already in this room.';return;}if(roomMembers.length>=roomPlayerLimit){document.getElementById('joinCodeHint').textContent='This room is full.';return;}const used=roomMembers.map(m=>m.color),color=roomColors.find(c=>!used.includes(c));if(color===undefined)return;roomMembers.push({name,color,host:false});try{localStorage.setItem('lufanActiveRoom',JSON.stringify({code:saved.code,limit:roomPlayerLimit,colors:roomColors,members:roomMembers,updatedAt:Date.now()}));}catch(e){}document.getElementById('joinRoomModal').classList.remove('open');document.getElementById('roomNotice').textContent='You joined this room in this browser. Joining from other devices requires an online room server.';renderRoomRoster();showScreen('roomScreen');});
+
+document.getElementById('copyCode').addEventListener('click',async()=>{const code=document.getElementById('roomCode').textContent,btn=document.getElementById('copyCode'),notice=document.getElementById('roomNotice');let copied=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(code);copied=true;}}catch(e){}if(!copied){const ta=document.createElement('textarea');ta.value=code;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,ta.value.length);try{copied=!!document.execCommand('copy');}catch(e){}ta.remove();}clearTimeout(window.__lufanCopySignalTimer);if(copied){btn.textContent='Copy ✅';notice.textContent='Copy hoia gece!';window.__lufanCopySignalTimer=setTimeout(()=>{if(btn.textContent==='Copy ✅')btn.textContent='COPY ROOM CODE';if(notice.textContent==='Copy hoia gece!')notice.textContent='';},1800);}else{btn.textContent='COPY ROOM CODE';notice.textContent='Auto-copy was blocked. Room code: '+code+' — press and hold the code above to copy it.';window.__lufanCopySignalTimer=setTimeout(()=>{if(notice.textContent.startsWith('Auto-copy was blocked.'))notice.textContent='';},3500);}});
+document.getElementById('shareRoom').addEventListener('click',async()=>{const code=document.getElementById('roomCode').textContent;const text='Join my LUFAN Classic Ludo room! Room code: '+code;if(navigator.share){try{await navigator.share({title:'Join LUFAN Ludo Room',text});}catch(e){}}else{try{await navigator.clipboard.writeText(text);document.getElementById('roomNotice').textContent='Room invite copied. Share it with your friends.';}catch(e){document.getElementById('roomNotice').textContent=text;}}});
+document.getElementById('hostGame').addEventListener('click',()=>{if(roomMembers.length<roomPlayerLimit)return;selectedMode='local';playerCount=roomPlayerLimit;selectedColorIds=roomColors.slice();currentPlayer=activePlayerIds().includes(1)?1:activePlayerIds()[0];diceValue=0;consecutiveSixes=0;waitingForMove=false;computerBusy=false;movingToken=false;tokenSelection=null;tokenProgress=Array.from({length:4},()=>[-1,-1,-1,-1]);gameStarted=true;setDie(1,false);drawBoard();updateGameText(PLAYER_NAMES[currentPlayer]+' starts! Classic Ludo rules are active. Roll a 6 to bring a token out of the yard.');showScreen('gameScreen');});
+
+
+
+// LUFAN Profile module: isolated UI and local profile data; does not alter game logic.
+(()=>{
+ const $=id=>document.getElementById(id), overlay=$('lufanProfileOverlay'), editModal=$('lpfEditModal'), confirmModal=$('lpfConfirmModal');
+ if(!overlay)return;
+ const avatars=['♟','🦊','🦁','🐼','👑','🥷'];
+ let profile={};
+ try{profile=JSON.parse(localStorage.getItem('lufanPlayerProfile')||'{}')}catch(e){profile={}}
+ if(!profile.id)profile.id='LF-'+Math.random().toString(36).slice(2,8).toUpperCase();
+ if(!profile.name)profile.name='Player'; if(!profile.avatar)profile.avatar='♟'; if(typeof profile.sound!=='boolean')profile.sound=true;
+ const statsKey='lufanPlayerStats'; let stats={matches:0,wins:0,rolls:0,streak:0};
+ try{stats={...stats,...JSON.parse(localStorage.getItem(statsKey)||'{}')}}catch(e){}
+ const saveProfile=()=>{try{localStorage.setItem('lufanPlayerProfile',JSON.stringify(profile))}catch(e){};render()};
+ const saveStats=()=>{try{localStorage.setItem(statsKey,JSON.stringify(stats))}catch(e){};render()};
+ function toast(msg){const t=$('lpfToast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2300)}
+ function render(){ $('lpfHeroAvatar').textContent=profile.avatar;$('lpfHeroName').textContent=profile.name;$('lpfPlayerId').textContent=profile.id;
+  const rate=stats.matches?((stats.wins/stats.matches)*100).toFixed(1)+'%':'—';
+  $('lpfMatches').textContent=stats.matches;$('lpfWins').textContent=stats.wins;$('lpfRate').textContent=rate;$('lpfRolls').textContent=stats.rolls;
+  $('lpfMatchesRow').textContent=stats.matches;$('lpfWinsRow').textContent=stats.wins;$('lpfLosses').textContent=Math.max(0,stats.matches-stats.wins);$('lpfRateRow').textContent=rate;$('lpfStreak').textContent=stats.streak;$('lpfSoundLabel').textContent='Sound & Vibration · '+(profile.sound?'On':'Off');
+  const homeAvatar=document.querySelector('.home-head .avatar');if(homeAvatar){homeAvatar.textContent=profile.avatar;homeAvatar.setAttribute('aria-label','Player Profile');}
+  $('lpfAvatarGrid').querySelectorAll('[data-avatar]').forEach(b=>b.classList.toggle('selected',b.dataset.avatar===profile.avatar));
+ }
+ function openProfile(){render();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('lpfClose').focus()}
+ function closeProfile(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.style.overflow='';const b=document.querySelector('.home-head .avatar');if(b)b.focus()}
+ function openEdit(){ $('lpfNameInput').value=profile.name;editModal.classList.add('open');render();$('lpfNameInput').focus()}
+ function closeEdit(){editModal.classList.remove('open')}
+ document.querySelector('.home-head .avatar')?.addEventListener('click',openProfile);
+ $('lpfClose').addEventListener('click',closeProfile);$('lpfEditAction').addEventListener('click',openEdit);
+ $('lpfEditCancel').addEventListener('click',closeEdit);
+ $('lpfEditSave').addEventListener('click',()=>{const name=$('lpfNameInput').value.trim();if(!name){toast('Please enter a player name.');return}profile.name=name.slice(0,24);saveProfile();closeEdit();toast('Profile saved on this device.')});
+ $('lpfAvatarGrid').addEventListener('click',e=>{const b=e.target.closest('[data-avatar]');if(!b)return;profile.avatar=b.dataset.avatar;render()});
+ $('lpfCopyId').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(profile.id);toast('Player ID copied.')}catch(e){const ta=document.createElement('textarea');ta.value=profile.id;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Player ID copied.')}catch(_){toast('Player ID: '+profile.id)}ta.remove()}});
+ $('lpfSoundAction').addEventListener('click',()=>{profile.sound=!profile.sound;saveProfile();toast('Profile sound preference updated. This does not change in-game audio yet.')});
+ $('lpfPrivacyAction').addEventListener('click',()=>toast('Profile data is stored locally in this browser; clearing browser data may remove it.'));
+ function confirmAction(title,desc,yes){$('lpfConfirmTitle').textContent=title;$('lpfConfirmText').textContent=desc;$('lpfConfirmYes').onclick=()=>{confirmModal.classList.remove('open');yes()};confirmModal.classList.add('open')}
+ $('lpfResetStats').addEventListener('click',()=>confirmAction('Reset statistics?','Your locally saved profile statistics will be reset to zero.',()=>{stats={matches:0,wins:0,rolls:0,streak:0};saveStats();toast('Statistics reset.')}));
+ $('lpfConfirmCancel').addEventListener('click',()=>confirmModal.classList.remove('open'));
+ const authModal=$('lpfAuthModal'); let auth={};
+ try{auth=JSON.parse(localStorage.getItem('lufanLocalAuth')||'{}')}catch(e){auth={}}
+ function openAuthForm(mode){$('lpfAuthTitle').textContent=mode;$('lpfAuthName').value=profile.name||'';$('lpfAuthEmail').value=auth.email||'';authModal.classList.add('open');$('lpfAuthName').focus()}
+ function renderAuth(){const logged=!!auth.loggedIn;$('lpfAuthStatus').textContent=logged?('Signed in as '+(auth.name||'Player')+' · '+(auth.email||'')):'Choose Sign In or Login to continue.';$('lpfSignInButton').style.display=logged?'none':'flex';$('lpfLoginButton').style.display=logged?'none':'flex';$('lpfLogoutButton').disabled=!logged;$('lpfLogoutButton').style.opacity=logged?'1':'.45'}
+ $('lpfSignInButton').addEventListener('click',()=>openAuthForm('Sign In'));
+ $('lpfLoginButton').addEventListener('click',()=>openAuthForm('Login'));
+ $('lpfAuthCancel').addEventListener('click',()=>authModal.classList.remove('open'));
+ $('lpfAuthSubmit').addEventListener('click',()=>{const name=$('lpfAuthName').value.trim(),email=$('lpfAuthEmail').value.trim();if(!name||!email||!$('lpfAuthEmail').checkValidity()){toast('Enter a valid player name and email.');return}auth={loggedIn:true,name:name.slice(0,24),email};try{localStorage.setItem('lufanLocalAuth',JSON.stringify(auth))}catch(e){}profile.name=auth.name;saveProfile();authModal.classList.remove('open');renderAuth();toast('Demo login successful on this device.')});
+ $('lpfLogoutButton').addEventListener('click',()=>{if(!auth.loggedIn){toast('You are not logged in.');return}confirmAction('Log Out?','Are you sure you want to logout from this device?',()=>{auth={loggedIn:false};try{localStorage.setItem('lufanLocalAuth',JSON.stringify(auth))}catch(e){}renderAuth();toast('Logged out on this device.')})});
+ [editModal,confirmModal,authModal].forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(confirmModal.classList.contains('open'))confirmModal.classList.remove('open');else if(authModal.classList.contains('open'))authModal.classList.remove('open');else if(editModal.classList.contains('open'))closeEdit();else if(overlay.classList.contains('open'))closeProfile()}});
+ // Appearance mode and app theme are separate preferences; the existing profile settings remain intact.
+ const modeKey='lufanAppearanceMode', themeKey='lufanAppTheme';
+ let appearance=localStorage.getItem(modeKey)||'dark', appTheme=localStorage.getItem(themeKey)||'midnight';
+ function applyAppearance(){let actual=appearance==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):appearance;document.body.dataset.lufanMode=actual;document.querySelectorAll('[data-lpf-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.lpfMode===appearance));}
+ function applyAppTheme(){document.body.dataset.lufanTheme=appTheme;document.querySelectorAll('[data-lpf-theme]').forEach(b=>b.classList.toggle('selected',b.dataset.lpfTheme===appTheme));}
+ document.querySelectorAll('[data-lpf-mode]').forEach(b=>b.addEventListener('click',()=>{appearance=b.dataset.lpfMode;localStorage.setItem(modeKey,appearance);applyAppearance()}));
+ document.querySelectorAll('[data-lpf-theme]').forEach(b=>b.addEventListener('click',()=>{appTheme=b.dataset.lpfTheme;localStorage.setItem(themeKey,appTheme);applyAppTheme()}));
+ applyAppearance();applyAppTheme();renderAuth();
+ // Stats are deliberately labelled as local profile stats; no fabricated game results are inserted.
+ saveProfile();
+})();
+
+</script>
+
+<div id="leaveGameDialog" role="dialog" aria-modal="true" aria-labelledby="leaveGameTitle" aria-describedby="leaveGameMessage" onclick="if(event.target===this)closeLeaveGameDialog()">
+  <div class="leave-card">
+    <div class="leave-icon" aria-hidden="true">↩</div>
+    <h2 id="leaveGameTitle">Leave Game?</h2>
+    <p id="leaveGameMessage">Are you sure you want to leave the current game? Your match progress may be lost.</p>
+    <div class="leave-actions">
+      <button type="button" class="stay-btn" onclick="closeLeaveGameDialog()">Stay in Game</button>
+      <button type="button" class="leave-btn" onclick="leaveCurrentGame()">Leave Game</button>
+    </div>
+  </div>
+</div>
+
+<div id="lufanInfoModal" role="dialog" aria-modal="true" aria-labelledby="lufanInfoHeading" aria-hidden="true">
+ <div class="lufan-info-card" role="document">
+  <div class="lufan-info-head"><div class="lufan-info-mark" aria-hidden="true">L</div><div><div class="lufan-info-title" id="lufanInfoHeading">LUFAN</div><div class="lufan-info-sub">YOUR LUDO WORLD · VERSION 1.0</div></div><button type="button" class="lufan-info-close" id="lufanInfoClose" aria-label="Close information">×</button></div>
+  <div class="lufan-info-tabs" role="tablist" aria-label="LUFAN information">
+   <button type="button" class="lufan-info-tab" role="tab" id="lufanTabAbout" aria-controls="lufanPageAbout" aria-selected="true" data-info-tab="About">About LUFAN</button>
+   <button type="button" class="lufan-info-tab" role="tab" id="lufanTabRules" aria-controls="lufanPageRules" aria-selected="false" data-info-tab="Rules">Rules &amp; Privacy</button>
+   <button type="button" class="lufan-info-tab" role="tab" id="lufanTabCredits" aria-controls="lufanPageCredits" aria-selected="false" data-info-tab="Credits">Credits</button>
+  </div>
+  <section class="lufan-info-page" id="lufanPageAbout" role="tabpanel" aria-labelledby="lufanTabAbout" data-info-page="About">
+   <h3>Play together. Race to win.</h3><p>LUFAN is a Classic Ludo game designed to bring friends and family together through fun, strategy, and friendly competition.</p>
+   <ul><li>Classic Ludo-style gameplay</li><li>2, 3, and 4 player modes</li><li>Token colour selection</li><li>Room creation and room-code interface</li></ul>
+   <p>Room features shown in this version do not by themselves guarantee live cross-device multiplayer; that requires a connected real-time backend.</p>
+  </section>
+  <section class="lufan-info-page" id="lufanPageRules" role="tabpanel" aria-labelledby="lufanTabRules" data-info-page="Rules" hidden>
+   <h3>Rules &amp; Fair Play</h3><ul><li>Take turns and follow the dice and legal-move prompts shown in the game.</li><li>Use the available token controls only for legal moves; the game’s implemented rules and prompts determine valid actions.</li><li>Play fairly, respect other players, and do not intentionally disrupt a match.</li></ul>
+   <h3>Privacy</h3><p>Use a nickname and avoid entering passwords, payment details, or other sensitive personal information. This game version uses browser storage for some local settings and room-interface state. Information stored only in one browser is not automatically shared with another device.</p><p>If the game is later connected to an online server, its data handling should be reviewed against that server’s actual privacy policy before use.</p>
+  </section>
+  <section class="lufan-info-page" id="lufanPageCredits" role="tabpanel" aria-labelledby="lufanTabCredits" data-info-page="Credits" hidden>
+   <h3>Credits</h3><div class="lufan-info-meta"><div><small>Founder</small><strong>Al Muhimenul Shohan</strong></div><div><small>AI Assistance</small><strong>OpenAI</strong></div><div><small>Version</small><strong>1.0</strong></div><div><small>Game</small><strong>LUFAN Classic Ludo</strong></div></div>
+   <p style="margin-top:13px">Built to make friendly Ludo matches more enjoyable.</p>
+  </section>
+  <div class="lufan-info-foot">LUFAN · ROLL • RACE • RULE</div>
+ </div>
+</div>
+<script id="lufan-info-dialog-script">
+(function(){
+ const modal=document.getElementById('lufanInfoModal');
+ const openBtn=document.getElementById('lufanInfoOpen');
+ const markOpenBtn=document.getElementById('lufanMarkInfoOpen');
+ const closeBtn=document.getElementById('lufanInfoClose');
+ if(!modal||!openBtn||!markOpenBtn||!closeBtn)return;
+ let previousFocus=null;
+ function openInfo(){previousFocus=document.activeElement;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';closeBtn.focus();}
+ function closeInfo(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(previousFocus&&previousFocus.isConnected)previousFocus.focus();}
+ function showInfoTab(name){modal.querySelectorAll('[data-info-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.infoTab===name)));modal.querySelectorAll('[data-info-page]').forEach(p=>p.hidden=p.dataset.infoPage!==name);}
+ openBtn.addEventListener('click',openInfo);markOpenBtn.addEventListener('click',openInfo);closeBtn.addEventListener('click',closeInfo);
+ modal.addEventListener('click',e=>{if(e.target===modal)closeInfo();});
+ modal.querySelectorAll('[data-info-tab]').forEach(b=>b.addEventListener('click',()=>showInfoTab(b.dataset.infoTab)));
+ document.addEventListener('keydown',e=>{if(!modal.classList.contains('open'))return;if(e.key==='Escape'){e.preventDefault();closeInfo();}if(e.key==='Tab'){const items=[...modal.querySelectorAll('button:not([disabled])')];if(!items.length)return;const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+})();
+</script>
+
+</body>
+</html>
+<style id="lufan-dice-face-shading">
+/* Distinct lighting on all six faces makes the 3D rotation easier to read. */
+#gameScreen .die-face.front{background:linear-gradient(145deg,#ffffff 0%,#f7faff 48%,#cbd8e8 100%)!important;box-shadow:inset 2px 2px 3px #fff,inset -3px -4px 6px #9aa9bc,0 0 2px #56657a!important;}
+#gameScreen .die-face.back{background:linear-gradient(145deg,#b8c5d6 0%,#8e9eb3 55%,#64748b 100%)!important;box-shadow:inset 2px 2px 4px #dce6f3,inset -4px -4px 6px #526176!important;}
+#gameScreen .die-face.right{background:linear-gradient(120deg,#d8e2ef 0%,#9cacc1 55%,#6f8097 100%)!important;box-shadow:inset 2px 2px 3px #eef5ff,inset -4px -4px 6px #596a80!important;}
+#gameScreen .die-face.left{background:linear-gradient(120deg,#aebdd0 0%,#7f91a8 58%,#52647b 100%)!important;box-shadow:inset 2px 2px 3px #d4dfed,inset -4px -4px 6px #405168!important;}
+#gameScreen .die-face.top{background:linear-gradient(145deg,#ffffff 0%,#f4f8ff 58%,#dce7f5 100%)!important;box-shadow:inset 2px 2px 3px #fff,inset -3px -3px 5px #b0bfd2!important;}
+#gameScreen .die-face.bottom{background:linear-gradient(145deg,#8999ae 0%,#65768d 55%,#46566c 100%)!important;box-shadow:inset 2px 2px 3px #b5c2d3,inset -4px -4px 6px #344258!important;}
+#gameScreen .die-face .pip-dot{background:radial-gradient(circle at 28% 22%,#414b5a 0%,#111827 58%,#020617 100%)!important;box-shadow:inset 0 1px 1px #ffffff55,0 1px 1px #0006!important;}
+</style>
+<style>
+/* Fullscreen keeps the same patterned blue arena background. */
+#gameScreen:fullscreen{background-color:#123f78!important;background-image:linear-gradient(125deg,#102b57a8,#257dc5a8 48%,#081d46b8),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%234a92d2' fill-opacity='.28' stroke='%230b2d62' stroke-opacity='.4' stroke-width='3'%3E%3Cpath d='M90 0L180 45 135 135 45 90Z'/%3E%3Cpath d='M0 90L45 45 135 90 90 180Z'/%3E%3C/g%3E%3Cg fill='%230a2c61' fill-opacity='.7'%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3Ccircle cx='135' cy='135' r='10'/%3E%3C/g%3E%3C/svg%3E")!important;background-size:cover,180px 180px!important;}
+#gameScreen:fullscreen .game-toolbar{position:absolute;top:calc(3px + env(safe-area-inset-top));right:5px;width:auto;margin:0;z-index:9999;}
+#gameScreen:fullscreen .fullscreen-btn{font-size:9px!important;line-height:1!important;padding:4px 6px!important;border-radius:6px!important;min-height:0!important;opacity:.88;}
+</style>
